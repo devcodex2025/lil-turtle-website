@@ -12,10 +12,8 @@ function TurtleModel() {
 
     useFrame((state) => {
         if (groupRef.current) {
-            // 180 degrees side to side = +/- 90 degrees from center
-            // 90 degrees in radians = Math.PI / 2
-            // Speed factor 0.5 for smooth sway
-            groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * (Math.PI / 2);
+            // Limit to +/- 15 degrees (Math.PI / 12)
+            groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * (Math.PI / 12);
         }
     });
 
@@ -50,6 +48,10 @@ export default function Turtle3DViewer() {
                         enableZoom={false}
                         enableRotate={true}
                         enablePan={false}
+                        minAzimuthAngle={-Math.PI / 6} // Limit left rotation (30 deg)
+                        maxAzimuthAngle={Math.PI / 6}  // Limit right rotation (30 deg)
+                        minPolarAngle={Math.PI / 2 - 0.2} // Limit up look
+                        maxPolarAngle={Math.PI / 2 + 0.2} // Limit down look
                     />
                 </Suspense>
             </Canvas>
