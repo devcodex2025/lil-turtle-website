@@ -19,11 +19,11 @@ function TurtleModel() {
 export default function Turtle3D() {
     return (
         <div className="w-full h-[600px] relative">
-            <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+            <Canvas camera={{ position: [0, 0, 10], fov: 100 }}>
                 <Suspense fallback={null}>
-                    <ambientLight intensity={0.5} />
+                    <ambientLight intensity={1} />
                     <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-                    <pointLight position={[-10, -10, -10]} />
+                    <pointLight position={[0, 0, 0]} />
                     <TurtleModel />
                     <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={2} />
                 </Suspense>

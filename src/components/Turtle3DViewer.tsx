@@ -39,19 +39,17 @@ export default function Turtle3DViewer() {
     return (
         <div className="w-full h-[80vh] relative">
             <Canvas>
-                <PerspectiveCamera makeDefault position={[0, 0, 18]} fov={70} />
+                <PerspectiveCamera makeDefault position={[0, 0, 18]} fov={40} />
                 <Suspense fallback={<LoadingBox />}>
-                    <ambientLight intensity={0.6} />
+                    <ambientLight intensity={1} />
                     <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
                     <directionalLight position={[-5, 3, -5]} intensity={0.5} />
-                    <pointLight position={[0, 5, 0]} intensity={0.8} color="#00ff9d" />
+                    <pointLight position={[0, 10, 0]} intensity={0.8} color="#00ff9d" />
                     <TurtleModel />
                     <OrbitControls
                         enableZoom={false}
                         enableRotate={true}
                         enablePan={false}
-                        maxPolarAngle={Math.PI / 2}
-                        minPolarAngle={Math.PI / 2}
                     />
                 </Suspense>
             </Canvas>
