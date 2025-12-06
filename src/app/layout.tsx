@@ -10,7 +10,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://lil-turtle.com"),
+  metadataBase: new URL("https://lillturtle.fun"),
   title: "Lil Turtle - Premium Memecoin & NFT Collection on Solana",
   description: "Join the elite Lil Turtle community. Premium memecoin with exclusive NFT collections, community-driven tokenomics, and unique digital assets on Solana blockchain.",
   keywords: [
