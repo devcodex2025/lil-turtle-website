@@ -18,9 +18,9 @@ Meet Lil Turtle – the most stylish token in your portfolio.
 
 ![Lil Turtle 3D](public/github_preview/github-preview%203d.gif)
 
-## 💎 NFT Collection
+## 💎 NFT Collections
 
-Our exclusive NFT collection features unique, hand-crafted digital art pieces on the **Abstract** blockchain.
+Our exclusive NFT collections features unique, hand-crafted digital art pieces on the **Abstract** blockchain.
 
 - **Mini Collection**: 24 unique abstract pieces.
 - **Crown Collection**: 16 exclusive royal turtles.
