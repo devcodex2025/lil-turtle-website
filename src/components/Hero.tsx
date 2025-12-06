@@ -12,7 +12,7 @@ export default function Hero() {
                 <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary-gold/10 rounded-full blur-[120px] animate-pulse-slow" style={{ animationDelay: "2s" }} />
             </div>
 
-            <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+            <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
                 {/* Text Content */}
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
