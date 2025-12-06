@@ -21,7 +21,7 @@ function TurtleModel() {
 
     return (
         <group ref={groupRef}>
-            <primitive object={scene} scale={24.0} position={[0, -3.5, 0]} />
+            <primitive object={scene} scale={5.5} position={[0, -3.5, 0]} />
         </group>
     );
 }
@@ -39,10 +39,10 @@ export default function Turtle3DViewer() {
     return (
         <div className="w-full h-[80vh] relative">
             <Canvas>
-                <PerspectiveCamera makeDefault position={[0, 0, 18]} fov={40} />
+                <PerspectiveCamera makeDefault position={[0, 1, 18]} fov={45} />
                 <Suspense fallback={<LoadingBox />}>
                     <ambientLight intensity={1} />
-                    <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+                    <directionalLight position={[5, 2, 10]} intensity={1.5} castShadow />
                     <directionalLight position={[-5, 3, -5]} intensity={0.5} />
                     <pointLight position={[0, 10, 0]} intensity={0.8} color="#00ff9d" />
                     <TurtleModel />
