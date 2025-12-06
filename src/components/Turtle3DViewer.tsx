@@ -13,7 +13,7 @@ function TurtleModel() {
     useFrame((state) => {
         if (groupRef.current) {
             // Limit to +/- 15 degrees (Math.PI / 12)
-            groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * (Math.PI / 12);
+            groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 1.25) * (Math.PI / 12);
         }
     });
 
