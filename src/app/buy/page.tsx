@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Buy $LILTURTLE - Lil Turtle Token",
         description: "Swap and buy Lil Turtle token on Solana using Jupiter aggregator.",
-        images: ["/logo.png"],
+        images: ["/og-buy.png"],
     },
 };
 

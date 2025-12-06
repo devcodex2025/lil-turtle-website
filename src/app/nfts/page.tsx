@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "NFT Gallery - Lil Turtle Collection",
         description: "Explore exclusive Abstract Lil Turtle NFTs. Unique digital collectibles on Solana blockchain.",
-        images: ["/nfts/mini/1.webp"],
+        images: ["/og-nfts.png"],
     },
 };
 
