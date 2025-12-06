@@ -70,12 +70,12 @@ export default function NFTCollections() {
     const collections = [
         {
             title: "Abstract Lil Turtle Mini",
-            image: "/nft-1.png",
+            image: "/nfts/mini/1.webp",
             link: "https://abstract-lil-turtle-mini.nfts2.me/",
         },
         {
             title: "Abstract Lil Turtle Crown",
-            image: "/nft-2.png",
+            image: "/nfts/crown/1.webp",
             link: "https://abstract-lil-turtle-crown-mini.nfts2.me/",
         },
     ];

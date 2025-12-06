@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import Turtle3DViewer from "./Turtle3DViewer";
 
 export default function Hero() {
     return (
@@ -53,22 +53,15 @@ export default function Hero() {
                     </div>
                 </motion.div>
 
-                {/* 3D Visual */}
+                {/* 3D Model Viewer */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.8, rotate: 10 }}
                     animate={{ opacity: 1, scale: 1, rotate: 0 }}
                     transition={{ duration: 1.2, ease: "easeOut" }}
                     className="relative"
                 >
-                    <div className="relative z-10 animate-float">
-                        <Image
-                            src="/hero-turtle-3d.png"
-                            alt="Lil Turtle 3D"
-                            width={800}
-                            height={800}
-                            className="w-full max-w-[600px] mx-auto drop-shadow-2xl"
-                            priority
-                        />
+                    <div className="relative z-10">
+                        <Turtle3DViewer />
                     </div>
 
                     {/* Decorative Ring */}

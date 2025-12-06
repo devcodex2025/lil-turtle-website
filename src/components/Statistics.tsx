@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 interface StatItemProps {
     value: string;
@@ -59,9 +59,9 @@ export default function Statistics() {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     const stats = [
-        { value: "1000+", label: "Holders" },
-        { value: "5000+", label: "Community" },
-        { value: "100%", label: "Safe" },
+        { value: "94%", label: "Turtle Power" },
+        { value: "100X", label: "Meme Potential" },
+        { value: "16", label: "Community" },
     ];
 
     return (

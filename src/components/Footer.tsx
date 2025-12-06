@@ -9,7 +9,7 @@ export default function Footer() {
             url: "https://boop.fun/tokens/14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop",
             icon: (
                 <div className="relative w-6 h-6">
-                    <Image src="/boop-logo.png" alt="Boop.fun" fill className="object-contain" />
+                    <Image src="/boop-logo-32x32.png" alt="Boop.fun - Memecoin Launchpad" fill className="object-contain" />
                 </div>
             ),
         },
@@ -33,8 +33,8 @@ export default function Footer() {
                         <a href="/" className="flex items-center gap-3 mb-4 group">
                             <div className="relative w-10 h-10 group-hover:rotate-12 transition-transform duration-300">
                                 <Image
-                                    src="/logo-luxury.png"
-                                    alt="Lil Turtle Logo"
+                                    src="/logo.svg"
+                                    alt="Lil Turtle - Premium Memecoin Logo"
                                     fill
                                     className="object-contain"
                                 />
