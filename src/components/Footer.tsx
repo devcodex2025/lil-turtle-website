@@ -91,7 +91,7 @@ export default function Footer() {
                 {/* Bottom */}
                 <div className="pt-8 border-t border-white/5 text-center">
                     <p className="text-gray-500 text-sm">
-                        © 2024 Lil Turtle. All rights reserved.
+                        © {new Date().getFullYear()} Lil Turtle. All rights reserved.
                     </p>
                     <p className="text-gray-600 text-xs mt-2">
                         Small steps matter. Become better.

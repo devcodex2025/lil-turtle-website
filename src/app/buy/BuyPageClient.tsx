@@ -4,28 +4,35 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TokenChart from "@/components/TokenChart";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { fetchTokenInfo, TokenInfo } from "@/services/tokenData";
+import { useState, useEffect } from "react";
+import JupiterWidget from "@/components/JupiterWidget";
 
 export default function BuyPageClient() {
-    // Load Jupiter Terminal script
+    const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null);
+
+
+
+    // Fetch token info
     useEffect(() => {
-        const script = document.createElement('script');
-        script.src = "https://terminal.jup.ag/main-v2.js";
-        script.onload = () => {
-            if (window.Jupiter) {
-                window.Jupiter.init({
-                    displayMode: "integrated",
-                    integratedTargetId: "integrated-terminal",
-                    endpoint: "https://api.mainnet-beta.solana.com",
-                    formProps: {
-                        fixedOutputMint: true,
-                        initialOutputMint: "14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop", // LIL TURTLE
-                    },
-                });
+        const loadData = async () => {
+            try {
+                const info = await fetchTokenInfo();
+                if (info) setTokenInfo(info);
+            } catch (e) {
+                console.error("Error loading token data:", e);
             }
         };
-        document.head.appendChild(script);
+        loadData();
+        const interval = setInterval(loadData, 60000); // Update every minute
+        return () => clearInterval(interval);
     }, []);
+
+    const formatCurrency = (value: number) => {
+        if (value >= 1000000) return `$${(value / 1000000).toFixed(2)}M`;
+        if (value >= 1000) return `$${(value / 1000).toFixed(2)}K`;
+        return `$${value.toFixed(2)}`;
+    };
 
     return (
         <main className="min-h-screen bg-bg-dark">
@@ -41,17 +48,21 @@ export default function BuyPageClient() {
                             transition={{ duration: 0.6 }}
                         >
                             <h1 className="text-4xl md:text-5xl font-black text-white mb-6 flex items-center gap-4">
-                                $LILTURTLE <span className="text-primary-green text-2xl bg-primary-green/10 px-3 py-1 rounded-lg">LIL</span>
+                                ${tokenInfo?.symbol || "LILTURTLE"} <span className="text-primary-green text-2xl bg-primary-green/10 px-3 py-1 rounded-lg">{tokenInfo?.symbol || "..."}</span>
                             </h1>
-                            <TokenChart />
+                            <TokenChart
+                                pairAddress={tokenInfo?.pairAddress}
+                                currentPrice={tokenInfo?.price ? parseFloat(tokenInfo.price) : undefined}
+                                priceChange={tokenInfo?.priceChange24h}
+                            />
                         </motion.div>
 
                         {/* Token Info Grid */}
                         <div className="grid sm:grid-cols-3 gap-4">
                             {[
-                                { label: "Market Cap", value: "$420K" },
-                                { label: "Liquidity", value: "$50K" },
-                                { label: "Volume (24h)", value: "$12K" },
+                                { label: "Market Cap", value: tokenInfo ? formatCurrency(tokenInfo.marketCap) : "..." },
+                                { label: "Liquidity", value: tokenInfo ? formatCurrency(tokenInfo.liquidity) : "..." },
+                                { label: "Volume (24h)", value: tokenInfo ? formatCurrency(tokenInfo.volume24h) : "..." },
                             ].map((stat, i) => (
                                 <motion.div
                                     key={stat.label}
@@ -77,11 +88,11 @@ export default function BuyPageClient() {
                         <div className="glass-card p-4 rounded-3xl sticky top-32 border border-primary-gold/20 overflow-hidden">
                             <h2 className="text-xl font-bold text-white mb-4 px-4">Swap Token</h2>
                             {/* Jupiter Terminal Container */}
-                            <div id="integrated-terminal" className="w-full min-h-[400px] rounded-2xl overflow-hidden" />
+                            <JupiterWidget />
 
-                            <p className="text-center text-xs text-gray-500 mt-4">
+                            {/* <p className="text-center text-xs text-gray-500 mt-4">
                                 Powered by Jupiter Aggregator
-                            </p>
+                            </p> */}
                         </div>
                     </motion.div>
                 </div>
@@ -92,9 +103,4 @@ export default function BuyPageClient() {
     );
 }
 
-// Add types for window.Jupiter
-declare global {
-    interface Window {
-        Jupiter: any;
-    }
-}
+

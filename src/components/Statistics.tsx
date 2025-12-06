@@ -59,7 +59,7 @@ export default function Statistics() {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     const stats = [
-        { value: "94%", label: "Turtle Power" },
+        { value: "29%", label: "Turtle Power" },
         { value: "100X", label: "Meme Potential" },
         { value: "16", label: "Community" },
     ];

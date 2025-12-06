@@ -1,14 +1,29 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
-import { Suspense } from "react";
+import { Suspense, useRef } from "react";
+import * as THREE from "three";
 
 function TurtleModel() {
     // Load the GLB model (with embedded materials and textures)
     const { scene } = useGLTF("/3d/colorfull_glb/base_basic_pbr.glb");
+    const groupRef = useRef<THREE.Group>(null);
 
-    return <primitive object={scene} scale={8.0} position={[0, -0.5, 0]} />;
+    useFrame((state) => {
+        if (groupRef.current) {
+            // 180 degrees side to side = +/- 90 degrees from center
+            // 90 degrees in radians = Math.PI / 2
+            // Speed factor 0.5 for smooth sway
+            groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * (Math.PI / 2);
+        }
+    });
+
+    return (
+        <group ref={groupRef}>
+            <primitive object={scene} scale={24.0} position={[0, -3.5, 0]} />
+        </group>
+    );
 }
 
 function LoadingBox() {
@@ -24,7 +39,7 @@ export default function Turtle3DViewer() {
     return (
         <div className="w-full h-[80vh] relative">
             <Canvas>
-                <PerspectiveCamera makeDefault position={[0, 0, 4]} fov={50} />
+                <PerspectiveCamera makeDefault position={[0, 0, 18]} fov={70} />
                 <Suspense fallback={<LoadingBox />}>
                     <ambientLight intensity={0.6} />
                     <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
@@ -33,9 +48,10 @@ export default function Turtle3DViewer() {
                     <TurtleModel />
                     <OrbitControls
                         enableZoom={false}
-                        autoRotate
-                        autoRotateSpeed={1.5}
+                        enableRotate={true}
                         enablePan={false}
+                        maxPolarAngle={Math.PI / 2}
+                        minPolarAngle={Math.PI / 2}
                     />
                 </Suspense>
             </Canvas>
