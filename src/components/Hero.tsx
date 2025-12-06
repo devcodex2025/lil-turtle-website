@@ -5,7 +5,7 @@ import Turtle3DViewer from "./Turtle3DViewer";
 
 export default function Hero() {
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32">
             {/* Background Elements */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary-green/20 rounded-full blur-[120px] animate-pulse-slow" />

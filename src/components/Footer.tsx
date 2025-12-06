@@ -33,7 +33,7 @@ export default function Footer() {
                         <a href="/" className="flex items-center gap-3 mb-4 group">
                             <div className="relative w-10 h-10 group-hover:rotate-12 transition-transform duration-300">
                                 <Image
-                                    src="/logo.svg"
+                                    src="/LilTurtleLogo.png"
                                     alt="Lil Turtle - Premium Memecoin Logo"
                                     fill
                                     className="object-contain"

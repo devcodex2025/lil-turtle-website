@@ -9,9 +9,9 @@ export default function About() {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     const characteristics = [
-        { label: "TURTLE POWER", value: 100, color: "bg-[#00ff9d]" },
-        { label: "MEME POTENTIAL", value: 100, color: "bg-[#ffd700]" },
-        { label: "COMMUNITY", value: 100, color: "bg-[#9d00ff]" },
+        { label: "TURTLE POWER", value: 29, color: "bg-[#00ff9d]" },
+        { label: "MEME POTENTIAL", value: 10, color: "bg-[#ffd700]" },
+        { label: "COMMUNITY", value: 20, color: "bg-[#9d00ff]" },
     ];
 
     return (

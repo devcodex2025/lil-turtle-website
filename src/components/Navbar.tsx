@@ -43,7 +43,7 @@ export default function Navbar() {
                 <a href="/" className="flex items-center gap-3 group">
                     <div className="relative w-12 h-12 group-hover:rotate-12 transition-transform duration-300">
                         <Image
-                            src="/logo.svg"
+                            src="/LilTurtleLogo.png"
                             alt="Lil Turtle - Premium Memecoin Logo"
                             fill
                             className="object-contain"

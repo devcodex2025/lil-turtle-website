@@ -10,9 +10,10 @@ interface NFTCardProps {
     link: string;
     delay: number;
     isInView: boolean;
+    supply: number;
 }
 
-function NFTCard({ title, image, link, delay, isInView }: NFTCardProps) {
+function NFTCard({ title, image, link, delay, isInView, supply }: NFTCardProps) {
     return (
         <motion.a
             href={link}
@@ -49,7 +50,7 @@ function NFTCard({ title, image, link, delay, isInView }: NFTCardProps) {
                     </h3>
 
                     <div className="flex items-center justify-between mt-4">
-                        <span className="text-gray-400 text-sm">Total Supply: 1000</span>
+                        <span className="text-gray-400 text-sm">Total Supply: {supply}</span>
                         <div className="flex items-center gap-2 text-primary-gold font-bold">
                             <span>MINT NOW</span>
                             <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,11 +73,13 @@ export default function NFTCollections() {
             title: "Abstract Lil Turtle Mini",
             image: "/nfts/mini/1.webp",
             link: "https://abstract-lil-turtle-mini.nfts2.me/",
+            supply: 24,
         },
         {
             title: "Abstract Lil Turtle Crown",
             image: "/nfts/crown/1.webp",
             link: "https://abstract-lil-turtle-crown-mini.nfts2.me/",
+            supply: 16,
         },
     ];
 
@@ -109,6 +112,7 @@ export default function NFTCollections() {
                             link={collection.link}
                             delay={0.2 + index * 0.2}
                             isInView={isInView}
+                            supply={collection.supply}
                         />
                     ))}
                 </div>
