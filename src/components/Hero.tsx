@@ -27,7 +27,7 @@ export default function Hero() {
                     </div>
 
                     <h1 className="text-6xl md:text-8xl font-black leading-tight mb-6">
-                        <span className="text-white">LIL</span> <br />
+                        <span className="text-white">$LIL</span> <br />
                         <span className="text-gradient-gold">TURTLE</span>
                     </h1>
 
