@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 
 interface NFTCardProps {
@@ -68,6 +68,19 @@ export default function NFTCollections() {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+    // Force grid columns to bypass CSS pollution
+    const [cols, setCols] = useState(2);
+    useEffect(() => {
+        const handleResize = () => {
+            // md breakpoint is 768px
+            if (window.innerWidth < 768) setCols(1);
+            else setCols(2);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const collections = [
         {
             title: "Abstract Lil Turtle Mini",
@@ -103,7 +116,10 @@ export default function NFTCollections() {
                     </p>
                 </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                <div
+                    className="grid gap-12 max-w-5xl mx-auto"
+                    style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+                >
                     {collections.map((collection, index) => (
                         <NFTCard
                             key={collection.title}

@@ -3,7 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { useState, useEffect } from "react";
+
 export default function Footer() {
+    // Force grid columns to bypass CSS pollution
+    const [cols, setCols] = useState(3);
+    useEffect(() => {
+        const handleResize = () => {
+            // md breakpoint is 768px
+            if (window.innerWidth < 768) setCols(1);
+            else setCols(3);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const socialLinks = [
         {
             name: "Boop",
@@ -28,7 +43,10 @@ export default function Footer() {
     return (
         <footer className="relative py-16 px-6 border-t border-white/5 bg-black/80 backdrop-blur-xl">
             <div className="max-w-7xl mx-auto relative z-10">
-                <div className="grid md:grid-cols-3 gap-12 mb-12">
+                <div
+                    className="grid gap-12 mb-12"
+                    style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+                >
                     {/* Brand */}
                     <div>
                         <Link href="/" className="flex items-center gap-3 mb-4 group">

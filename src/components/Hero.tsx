@@ -1,6 +1,23 @@
+"use client";
+
 import HeroClient from "./HeroClient";
 
+import { useState, useEffect } from "react";
+
 export default function Hero() {
+    // Force grid columns to bypass CSS pollution
+    const [cols, setCols] = useState(2);
+    useEffect(() => {
+        const handleResize = () => {
+            // lg breakpoint is 1024px
+            if (window.innerWidth < 1024) setCols(1);
+            else setCols(2);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32">
             {/* Background Elements */}
@@ -9,7 +26,10 @@ export default function Hero() {
                 <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary-gold/10 rounded-full blur-[120px] animate-pulse-slow" style={{ animationDelay: "2s" }} />
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+            <div
+                className="max-w-7xl mx-auto px-6 relative z-10 grid gap-12 items-center"
+                style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+            >
                 {/* Text Content */}
                 <div className="text-center lg:text-left">
                     <div className="inline-block px-4 py-2 rounded-full glass-card mb-6 border border-primary-green/30">
