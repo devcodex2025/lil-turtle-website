@@ -1,7 +1,8 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import NFTCatalogClient from "@/components/NFTCatalogClient";
+import NFTListContainer from "@/components/NFTListContainer";
 
 export const metadata: Metadata = {
     title: "NFT Gallery - Lil Turtle | Abstract Turtle NFT Collection",
@@ -12,38 +13,15 @@ export const metadata: Metadata = {
         description: "Explore exclusive Abstract Lil Turtle NFTs. Unique digital collectibles on Solana blockchain.",
         images: ["/og-nfts.png"],
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "NFT Gallery - Lil Turtle Collection",
+        description: "Explore exclusive Abstract Lil Turtle NFTs. Unique digital collectibles on Solana blockchain.",
+        images: ["/og-nfts.png"],
+    },
 };
 
-// Collection Data
-const collections = [
-    {
-        name: "Abstract Lil Turtle Mini",
-        cid: "bafybeigu2jy6e33ellha43tbpzhhbucvvnkevgxoht6f7biygjoipz53mm",
-        size: 24,
-        ext: "webp",
-        prefix: "Mini"
-    },
-    {
-        name: "Abstract Lil Turtle Crown",
-        cid: "bafybeieebib47wlpeqktbug47hemiudjrdt4uxt4yo45jxfzt4lslbdpby",
-        size: 16,
-        ext: "webp",
-        prefix: "Crown"
-    }
-];
-
-// Generate full list of NFTs on server
-const allNFTS = collections.flatMap(col =>
-    Array.from({ length: col.size }).map((_, i) => ({
-        id: `${col.prefix}-${i + 1}`,
-        title: `${col.name} #${i + 1}`,
-        // Using local images
-        image: `/nfts/${col.name.toLowerCase().includes('crown') ? 'crown' : 'mini'}/${i + 1}.${col.ext}`,
-        collection: col.name,
-        rarity: i < 5 ? "Legendary" : i < 10 ? "Rare" : "Common",
-        isSold: i < 3, // mark first few items sold for UI state demonstration
-    }))
-);
+// Collection Data moved to NFTListContainer to isolate fetching
 
 export default function NFTGallery() {
     return (
@@ -64,7 +42,11 @@ export default function NFTGallery() {
                     </div>
 
                     {/* Filters + Sort + Grid */}
-                    <NFTCatalogClient nfts={allNFTS} />
+                    <div className="relative">
+                        <Suspense fallback={<div className="text-center py-20 text-gray-500 animate-pulse">Loading collection status...</div>}>
+                            <NFTListContainer />
+                        </Suspense>
+                    </div>
                 </div>
             </section>
 

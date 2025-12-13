@@ -60,8 +60,9 @@ async function testRpc(url: string, name: string) {
         const version = await connection.getVersion();
         const latency = Date.now() - start;
         console.log(`[${name}] Success! Version: ${version["solana-core"]}, Latency: ${latency}ms`);
-    } catch (error: any) {
-        console.error(`[${name}] Failed:`, error.message);
+    } catch (error: unknown) {
+        const msg = (error as Error)?.message ?? String(error);
+        console.error(`[${name}] Failed:`, msg);
     }
 }
 

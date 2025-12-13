@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 
 export default function Ticker() {
@@ -9,7 +8,7 @@ export default function Ticker() {
         <section className="relative py-8 overflow-hidden border-y border-primary-green/20 bg-black/50 backdrop-blur-sm">
             {/* Background */}
             <div
-                className="absolute inset-0 opacity-10"
+                className="absolute inset-0 opacity-10 pointer-events-none"
                 style={{
                     background: 'linear-gradient(90deg, transparent 0%, rgba(0,255,157,0.2) 50%, transparent 100%)',
                 }}

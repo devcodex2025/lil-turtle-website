@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
     const socialLinks = [
@@ -30,7 +31,7 @@ export default function Footer() {
                 <div className="grid md:grid-cols-3 gap-12 mb-12">
                     {/* Brand */}
                     <div>
-                        <a href="/" className="flex items-center gap-3 mb-4 group">
+                        <Link href="/" className="flex items-center gap-3 mb-4 group">
                             <div className="relative w-10 h-10 group-hover:rotate-12 transition-transform duration-300">
                                 <Image
                                     src="/LilTurtleLogo.png"
@@ -42,7 +43,7 @@ export default function Footer() {
                             <span className="text-2xl font-black tracking-tight text-white group-hover:text-primary-green transition-colors">
                                 LIL TURTLE
                             </span>
-                        </a>
+                        </Link>
                         <p className="text-gray-400">
                             The most stylish memecoin in your portfolio. Community-driven, unique, and built for the future.
                         </p>
@@ -55,13 +56,13 @@ export default function Footer() {
                         </h4>
                         <ul className="space-y-2">
                             <li>
-                                <a href="/#about" className="text-gray-400 hover:text-primary-green transition-colors">About</a>
+                                <Link href="/#about" className="text-gray-400 hover:text-primary-green transition-colors">About</Link>
                             </li>
                             <li>
-                                <a href="/nfts" className="text-gray-400 hover:text-primary-green transition-colors">NFT Gallery</a>
+                                <Link href="/nfts" className="text-gray-400 hover:text-primary-green transition-colors">NFT Gallery</Link>
                             </li>
                             <li>
-                                <a href="/buy" className="text-gray-400 hover:text-primary-green transition-colors">Buy Token</a>
+                                <Link href="/buy" className="text-gray-400 hover:text-primary-green transition-colors">Buy Token</Link>
                             </li>
                         </ul>
                     </div>

@@ -11,6 +11,12 @@ export const metadata: Metadata = {
         description: "Swap and buy Lil Turtle token on Solana using Jupiter aggregator.",
         images: ["/og-buy.png"],
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "Buy $LILTURTLE - Lil Turtle Token",
+        description: "Swap and buy Lil Turtle token on Solana using Jupiter aggregator.",
+        images: ["/og-buy.png"],
+    },
 };
 
 export default async function BuyPage() {

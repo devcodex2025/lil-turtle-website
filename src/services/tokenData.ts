@@ -42,6 +42,9 @@ export async function fetchTokenInfo(): Promise<TokenInfo | null> {
             }
         }
 
+        // fallback to token attribute price change percentage from the token data if pool does not provide it
+        priceChange24h = parseFloat(tokenAttrs.price_change_percentage?.h24 || String(priceChange24h || 0));
+
         return {
             price: tokenAttrs.price_usd,
             priceChange24h: priceChange24h,

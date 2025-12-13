@@ -33,7 +33,7 @@ export default function About() {
 
                     <div className="glass-card p-8 rounded-3xl border-l-4 border-primary-green">
                         <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                            Lil Turtle isn't just another memecoin. It's a philosophy. A symbol of steady progress in a chaotic market.
+                            Lil Turtle isn&apos;t just another memecoin. It&apos;s a philosophy. A symbol of steady progress in a chaotic market.
                         </p>
                         <p className="text-gray-300 text-lg leading-relaxed">
                             While others rush and crash, Lil Turtle moves with purpose. Smart, resilient, and unstoppable. We believe that even small steps, when taken consistently, lead to massive results.

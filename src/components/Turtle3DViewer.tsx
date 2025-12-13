@@ -1,8 +1,8 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
-import { Suspense, useRef } from "react";
+import { OrbitControls, PerspectiveCamera, useGLTF, Html } from "@react-three/drei";
+import { Suspense, useRef, useState } from "react";
 import * as THREE from "three";
 
 function TurtleModel() {
@@ -26,16 +26,27 @@ function TurtleModel() {
 
 function LoadingBox() {
     return (
-        <mesh>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="#00ff9d" wireframe />
-        </mesh>
+        <group>
+            <mesh rotation={[0, 0, 0]}>
+                <boxGeometry args={[1, 1, 1]} />
+                <meshStandardMaterial color="#00ff9d" wireframe transparent opacity={0.3} />
+            </mesh>
+            <Html center>
+                <div className="flex flex-col items-center justify-center pointer-events-none select-none">
+                    <div className="w-12 h-12 border-4 border-primary-green border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <span className="text-primary-green font-bold text-sm tracking-widest whitespace-nowrap">LOADING 3D...</span>
+                </div>
+            </Html>
+        </group>
     );
 }
 
 export default function Turtle3DViewer() {
+    const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || window.matchMedia?.('(pointer: coarse)').matches);
+    const [allowRotate, setAllowRotate] = useState(false);
+
     return (
-        <div className="w-full h-[80vh] relative" style={{ touchAction: 'pan-y' as const }}>
+        <div className="w-full h-[80vh] relative" style={{ touchAction: 'pan-y' }}>
             <Canvas style={{ touchAction: 'pan-y' }}>
                 <PerspectiveCamera makeDefault position={[0, 1, 18]} fov={45} />
                 <Suspense fallback={<LoadingBox />}>
@@ -46,7 +57,7 @@ export default function Turtle3DViewer() {
                     <TurtleModel />
                     <OrbitControls
                         enableZoom={false}
-                        enableRotate={true}
+                        enableRotate={!isTouch || allowRotate}
                         enablePan={false}
                         minAzimuthAngle={-Math.PI / 6} // Limit left rotation (30 deg)
                         maxAzimuthAngle={Math.PI / 6}  // Limit right rotation (30 deg)
@@ -55,6 +66,17 @@ export default function Turtle3DViewer() {
                     />
                 </Suspense>
             </Canvas>
+
+            {/* Small toggle for enabling rotation on touch devices to avoid hijacking scroll */}
+            {isTouch && (
+                <button
+                    className={`absolute left-4 bottom-4 bg-black/60 text-white px-3 py-2 rounded-full text-xs font-bold border border-white/10 ${allowRotate ? 'bg-primary-green text-black' : ''}`}
+                    onClick={() => setAllowRotate(!allowRotate)}
+                    aria-pressed={allowRotate}
+                >
+                    {allowRotate ? 'Rotate: ON' : 'Rotate: OFF'}
+                </button>
+            )}
         </div>
     );
 }

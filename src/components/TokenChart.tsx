@@ -66,13 +66,13 @@ export default function TokenChart({ pairAddress, currentPrice, priceChange }: T
     };
 
     return (
-        <div className="w-full h-[400px] glass-card rounded-3xl p-6 relative overflow-hidden">
+        <div className="w-full h-[400px] glass-card rounded-3xl p-4 md:p-6 relative overflow-hidden">
             {/* Header */}
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex flex-col md:flex-row justify-between items-start mb-4 md:mb-8 gap-4">
                 <div>
                     <h3 className="text-gray-400 text-sm font-bold tracking-widest uppercase mb-1">Current Price</h3>
                     <div className="flex items-baseline gap-4">
-                        <span className="text-5xl font-black text-white">
+                        <span className="text-3xl md:text-5xl font-black text-white">
                             {currentPrice ? formatPrice(currentPrice) : "Loading..."}
                         </span>
                         {priceChange !== undefined && (
@@ -88,8 +88,8 @@ export default function TokenChart({ pairAddress, currentPrice, priceChange }: T
                             key={tf}
                             onClick={() => setTimeframe(tf)}
                             className={`px-3 py-1 rounded-lg text-sm font-bold transition-colors ${timeframe === tf
-                                    ? 'bg-primary-green text-black'
-                                    : 'text-gray-500 hover:text-white'
+                                ? 'bg-primary-green text-black'
+                                : 'text-gray-500 hover:text-white'
                                 }`}
                         >
                             {tf}
@@ -117,7 +117,11 @@ export default function TokenChart({ pairAddress, currentPrice, priceChange }: T
 
                 {/* SVG Chart */}
                 {pathD && (
-                    <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none">
+                    <svg
+                        viewBox="0 0 800 200"
+                        className="absolute inset-0 w-full h-full overflow-visible"
+                        preserveAspectRatio="none"
+                    >
                         <defs>
                             <linearGradient id="gradientArea" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stopColor="#00ff9d" stopOpacity="0.2" />

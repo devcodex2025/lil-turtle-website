@@ -1,0 +1,5 @@
+{
+  "Mini-1": "<SOLANA_MINT_ADDRESS>",
+  "Crown-1": "<SOLANA_MINT_ADDRESS>",
+  "Mini-1-abstract": { "chain": "abstract", "contract": "0x65586ce5Cac4BBAB88dcE0B2D4F399c0E7B70C14", "tokenId": 1 }
+}

@@ -1,9 +1,8 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Suspense } from "react";
-import { motion } from "framer-motion";
 
 function TurtleModel() {
     // For now, we'll use a placeholder since the OBJ file is very large

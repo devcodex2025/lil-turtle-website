@@ -6,9 +6,9 @@ import "@jup-ag/plugin/css";
 export default function JupiterWidget() {
     useEffect(() => {
         // Dynamically import the plugin to avoid SSR issues
-        import("@jup-ag/plugin").then((mod) => {
+            import("@jup-ag/plugin").then((mod) => {
             const { init } = mod;
-            init({
+            const cfg: Record<string, unknown> = {
                 displayMode: "integrated",
                 integratedTargetId: "integrated-terminal",
                 strictTokenList: false,
@@ -16,7 +16,7 @@ export default function JupiterWidget() {
                     initialInputMint: "So11111111111111111111111111111111111111112", // SOL
                     fixedOutputMint: true,
                     initialOutputMint: "14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop", // LIL TURTLE
-                } as any,
+                } as Record<string, unknown>,
                 // Custom Palette to match site theme
                 palette: {
                     main: "#020402", // bg-dark
@@ -29,7 +29,8 @@ export default function JupiterWidget() {
                     subText: "#a1a1aa",
                 },
                 containerStyles: { zIndex: 100, height: "100%", width: "100%" },
-            } as any);
+            };
+            init(cfg as unknown as object);
         }).catch((err) => console.error("Failed to load Jupiter Plugin", err));
     }, []);
 

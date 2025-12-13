@@ -35,7 +35,7 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
         <main className="min-h-screen bg-bg-dark">
             <Navbar />
 
-            <section className="pt-32 pb-20 px-6">
+            <section className="pt-28 md:pt-32 pb-12 md:pb-20 px-4 md:px-6">
                 <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
                     {/* Left: Chart Section (Takes up 2 cols) */}
                     <div className="lg:col-span-2 space-y-8">
@@ -44,7 +44,7 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
                         >
-                            <h1 className="text-4xl md:text-5xl font-black text-white mb-6 flex items-center gap-4">
+                            <h1 className="text-4xl md:text-5xl font-black text-white mb-6 flex flex-wrap items-center gap-4">
                                 ${tokenInfo?.symbol || "LILTURTLE"} <span className="text-primary-green text-2xl bg-primary-green/10 px-3 py-1 rounded-lg">{tokenInfo?.symbol || "..."}</span>
                             </h1>
                             <TokenChart
