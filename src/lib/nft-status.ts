@@ -66,10 +66,7 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                     // Pick RPC for chain
                     const chain = mapObj.chain;
                     let rpc = process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL || process.env.NEXT_PUBLIC_RPC_URL;
-
-                    // FIXED: Use correct Abstract RPC
-                    if (chain === 'abstract') rpc = 'https://api.mainnet.abs.xyz';
-
+                    if (chain === 'abstract') rpc = process.env.NEXT_PUBLIC_ABSTRACT_RPC_URL || rpc || 'https://rpc.abstract.xyz';
                     if (chain === 'polygon') rpc = process.env.NEXT_PUBLIC_POLYGON_RPC_URL || rpc;
                     if (chain === 'base') rpc = process.env.NEXT_PUBLIC_BASE_RPC_URL || rpc;
                     if (chain === 'op') rpc = process.env.NEXT_PUBLIC_OP_MAINNET_RPC_URL || rpc;
@@ -91,11 +88,19 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                             ],
                         };
                         const resp = await fetch(rpc, { method: 'POST', body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' } });
-                        const json = await resp.json();
+                        const text = await resp.text();
+                        let json: any = null;
+                        let hasWarned = false;
+                        try { json = JSON.parse(text); } catch (e) {
+                            if (!hasWarned) {
+                                console.warn('eth_call returned non-json response', rpc, text?.slice?.(0,160));
+                                hasWarned = true;
+                            }
+                        }
                         const result = json?.result;
                         let sold = !!(result && result !== '0x' && result !== '0x0000000000000000000000000000000000000000000000000000000000000000');
 
-                        // If ownerOf failed or returned zero address, try tokenURI
+                        // If ownerOf failed or returned zero address, try tokenURI (some contracts allow tokenURI only for minted tokens)
                         if (!sold) {
                             const tokenURISelector = '0xc87b56dd'; // tokenURI(uint256)
                             const tokenHex = BigInt(tokenId).toString(16).padStart(64, '0');
@@ -111,22 +116,57 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                                     ],
                                 };
                                 const resp2 = await fetch(rpc, { method: 'POST', body: JSON.stringify(body2), headers: { 'Content-Type': 'application/json' } });
-                                const json2 = await resp2.json();
+                                const text2 = await resp2.text();
+                                let json2: any = null;
+                                let hasWarned2 = false;
+                                try { json2 = JSON.parse(text2); } catch (e) {
+                                    if (!hasWarned2) {
+                                        console.warn('tokenURI returned non-json response', rpc, text2?.slice?.(0,160));
+                                        hasWarned2 = true;
+                                    }
+                                }
                                 const res2 = json2?.result;
+                                // If tokenURI returns something non-empty, assume token minted
                                 if (res2 && res2 !== '0x') {
                                     sold = true;
                                 }
                             } catch (err2) {
-                                // ignore
+                                console.warn('tokenURI check failed for', contract, tokenId, err2);
                             }
                         }
 
                         results[id] = sold;
                         nftStatusCache[id] = { sold, timestamp: Date.now() };
-
-                        // Alchemy fallback logic omitted for brevity/simplicity as primary RPC works now
-                        // and we want to keep file size manageable. 
-                        // If needed we can re-add, but Abstract is not on Alchemy usually?
+                        // If still not sold and an Alchemy API key is provided, try Alchemy NFT API for owners
+                        if (!sold) {
+                            const alchemyKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || process.env.ALCHEMY_API_KEY;
+                            // Only attempt Alchemy for chains it supports
+                            const alchemyChains = ['eth', 'polygon', 'base', 'op'];
+                            if (alchemyKey && alchemyChains.includes(chain)) {
+                                try {
+                                    const network = chain === 'polygon' ? 'polygon-mainnet' : 'eth-mainnet';
+                                    const endpoint = `https://eth-${network}.g.alchemy.com/nft/v2/${alchemyKey}/getOwnersForToken?contractAddress=${contract}&tokenId=${tokenId}`;
+                                    const resp3 = await fetch(endpoint);
+                                    const text3 = await resp3.text();
+                                    let json3: any = null;
+                                    let hasWarned3 = false;
+                                    try { json3 = JSON.parse(text3); } catch (e) {
+                                        if (!hasWarned3) {
+                                            console.warn('Alchemy returned non-json response', endpoint, text3?.slice?.(0,160));
+                                            hasWarned3 = true;
+                                        }
+                                    }
+                                    const owners = json3?.owners || [];
+                                    if (owners.length > 0) {
+                                        results[id] = true;
+                                        nftStatusCache[id] = { sold: true, timestamp: Date.now() };
+                                        sold = true;
+                                    }
+                                } catch (err3) {
+                                    console.warn('Alchemy fallback failed', err3);
+                                }
+                            }
+                        }
                         return;
                     } catch (err) {
                         console.error('eth_call failed for', contract, tokenId, err);
@@ -135,8 +175,10 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                         return;
                     }
                 }
+                // (No-op here; specific branches already wrote to results)
             } catch (err) {
-                console.error('Failed to check token supply', err);
+                console.error('Failed to check token supply for', mint, err);
+                // On error, set false (unsold)
                 results[id] = false;
                 nftStatusCache[id] = { sold: false, timestamp: Date.now() };
             }
@@ -144,5 +186,6 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
     }
 
     await Promise.all(checks);
+
     return results;
 }

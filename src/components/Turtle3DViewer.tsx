@@ -74,7 +74,7 @@ export default function Turtle3DViewer() {
                     onClick={() => setAllowRotate(!allowRotate)}
                     aria-pressed={allowRotate}
                 >
-                    {allowRotate ? 'Rotate: ON' : 'Rotate: OFF'}
+                    {allowRotate ? 'Manual rotate: ON' : 'Manual rotate: OFF'}
                 </button>
             )}
         </div>
