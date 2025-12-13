@@ -146,3 +146,22 @@ body {
   background: rgba(0, 255, 157, 0.1) !important;
   border-color: rgba(0, 255, 157, 0.3) !important;
 }
+
+/* Force Navbar Visibility to override 3rd party CSS conflicts */
+@media (min-width: 768px) {
+  .nav-desktop-force {
+    display: flex !important;
+  }
+  .nav-mobile-btn-force {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .nav-desktop-force {
+    display: none !important;
+  }
+  .nav-mobile-btn-force {
+    display: flex !important;
+  }
+}

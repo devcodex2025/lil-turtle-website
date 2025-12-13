@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Statistics from "@/components/Statistics";
@@ -22,8 +21,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="relative">
-      <Navbar />
+    <main className="min-h-screen bg-bg-dark">
       <PriceWidget />
       <Hero />
       <About />

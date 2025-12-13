@@ -22,6 +22,25 @@ export default function Navbar() {
     const pathname = usePathname();
     const isBuyPage = pathname === "/buy";
 
+    // Close mobile menu when route changes (prevent stale open state after navigation)
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
+
+    // Close mobile menu if window resized to desktop width
+    useEffect(() => {
+        const onResize = () => {
+            try {
+                if (window.innerWidth >= 768) setIsMobileMenuOpen(false);
+            } catch (e) {
+                // ignore in non-browser environments
+            }
+        };
+        onResize();
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
@@ -104,28 +123,38 @@ export default function Navbar() {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="hidden md:flex items-center gap-8">
-                    {NAV_LINKS.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className="text-sm font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors relative group"
-                        >
-                            {link.name}
-                            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-primary-green transition-all duration-300 group-hover:w-full" />
-                        </Link>
-                    ))}
+                <div className="hidden md:flex nav-desktop-force items-center gap-8">
+                    {NAV_LINKS.map((link) => {
+                        const isActive = pathname === link.href || (link.href !== '/#about' && pathname.startsWith(link.href));
+                        return (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                className={`text-sm font-bold uppercase tracking-widest transition-colors relative group ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'}`}
+                            >
+                                {link.name}
+                                <span className={`absolute -bottom-1 left-0 h-[2px] bg-primary-green transition-all duration-300 group-hover:w-full ${isActive ? 'w-full' : 'w-0'}`} />
+                            </Link>
+                        );
+                    })}
 
                     {isBuyPage && <ConnectButton />}
                 </div>
 
                 {/* Mobile Menu Button */}
                 <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    onClick={() => {
+                        try {
+                            if (window.innerWidth < 768) setIsMobileMenuOpen(!isMobileMenuOpen);
+                            else setIsMobileMenuOpen(false);
+                        } catch (e) {
+                            // ignore if window is not defined
+                        }
+                    }}
                     aria-expanded={isMobileMenuOpen}
                     aria-controls="mobile-menu"
                     aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-                    className="md:hidden w-12 h-12 flex items-center justify-center text-white"
+                    className="md:hidden nav-mobile-btn-force w-12 h-12 flex items-center justify-center text-white"
                 >
                     <div className="space-y-2">
                         <span className={`block w-8 h-0.5 bg-white transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2.5' : ''}`} />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { AppWalletProvider } from "@/components/AppWalletProvider";
+import Navbar from "@/components/Navbar";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -60,6 +61,7 @@ export default function RootLayout({
     <html lang="en" className="dark scroll-smooth">
       <body className={`${outfit.variable} font-sans antialiased bg-[#050505] text-white selection:bg-primary-gold selection:text-black overflow-x-hidden`}>
         <AppWalletProvider>
+          <Navbar />
           {children}
         </AppWalletProvider>
       </body>

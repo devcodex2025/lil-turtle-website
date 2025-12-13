@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TokenChart from "@/components/TokenChart";
 import { motion } from "framer-motion";
@@ -33,7 +32,6 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
 
     return (
         <main className="min-h-screen bg-bg-dark">
-            <Navbar />
 
             <section className="pt-28 md:pt-32 pb-12 md:pb-20 px-4 md:px-6">
                 <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">

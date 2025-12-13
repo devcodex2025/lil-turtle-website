@@ -72,6 +72,8 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
 
     // Fetch on-chain sold status only once after initial mount
     const checkedOnce = useRef(false);
+    const [initialCheckRunning, setInitialCheckRunning] = useState(false);
+    const [initialCheckComplete, setInitialCheckComplete] = useState(false);
     useEffect(() => {
         let cancelled = false;
         (async () => {
@@ -79,11 +81,13 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
                 // Prevent repeated checks while navigating/filtering — only run once per page load
                 if (checkedOnce.current) return;
                 checkedOnce.current = true;
+                setInitialCheckRunning(false);
                 // Snapshot the initial filtered list to avoid re-checking when filter/sort changes
                 const initialFiltered = filtered;
                 // Skip fetching if all initial items were already checked server-side
                 const needCheck = initialFiltered.some(f => !f.isSoldChecked);
                 if (!needCheck) return; // nothing to check: all visible items already have isSoldChecked
+                setInitialCheckRunning(true);
 
                 const ids = initialFiltered.map(f => f.id).join(',');
                 if (!ids) return;
@@ -122,6 +126,8 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
                 };
 
                 await Promise.all(Object.entries(groups).map(([prefix, idsArr]) => fetchGroup(prefix, idsArr)));
+                setInitialCheckRunning(false);
+                setInitialCheckComplete(true);
             } catch {
                 // ignore fetch errors — keep demo values
             }
@@ -132,7 +138,7 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
     return (
         <div>
             {/* Status check indicator */}
-            {filtered.some(f => !f.isSoldChecked) && (
+            {!initialCheckComplete && initialCheckRunning && (
                 <div className="text-center text-sm text-gray-400 mb-4">Checking on-chain status...</div>
             )}
             <div className="flex flex-wrap justify-center gap-4 mb-6">

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
-import Navbar from "@/components/Navbar";
+
 import Footer from "@/components/Footer";
 import NFTListContainer from "@/components/NFTListContainer";
 
@@ -26,7 +26,6 @@ export const metadata: Metadata = {
 export default function NFTGallery() {
     return (
         <main className="min-h-screen bg-bg-dark">
-            <Navbar />
 
             <section className="pt-32 pb-20 px-6">
                 <div className="max-w-7xl mx-auto">

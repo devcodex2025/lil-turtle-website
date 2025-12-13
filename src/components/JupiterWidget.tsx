@@ -6,7 +6,7 @@ import "@jup-ag/plugin/css";
 export default function JupiterWidget() {
     useEffect(() => {
         // Dynamically import the plugin to avoid SSR issues
-            import("@jup-ag/plugin").then((mod) => {
+        import("@jup-ag/plugin").then((mod) => {
             const { init } = mod;
             const cfg: Record<string, unknown> = {
                 displayMode: "integrated",
