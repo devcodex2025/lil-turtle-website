@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export default function About() {
     const ref = useRef(null);
@@ -14,12 +14,28 @@ export default function About() {
         { label: "COMMUNITY", value: 20, color: "bg-[#9d00ff]" },
     ];
 
+    // Force grid columns to bypass CSS pollution
+    const [cols, setCols] = useState(2);
+    useEffect(() => {
+        const handleResize = () => {
+            // lg breakpoint is 1024px
+            if (window.innerWidth < 1024) setCols(1);
+            else setCols(2);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <section id="about" className="relative py-32 px-6 overflow-hidden" ref={ref}>
             {/* Background Decor */}
             <div className="absolute right-0 top-1/4 w-1/2 h-1/2 bg-gradient-to-b from-primary-green/5 to-transparent blur-3xl -z-10" />
 
-            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <div
+                className="max-w-7xl mx-auto grid gap-16 items-center"
+                style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+            >
                 {/* Left: Content */}
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}

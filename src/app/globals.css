@@ -152,6 +152,7 @@ body {
   .nav-desktop-force {
     display: flex !important;
   }
+
   .nav-mobile-btn-force {
     display: none !important;
   }
@@ -161,7 +162,17 @@ body {
   .nav-desktop-force {
     display: none !important;
   }
+
   .nav-mobile-btn-force {
     display: flex !important;
   }
+}
+
+/* 
+  Fix for Jupiter Widget style pollution.
+  The widget sets html { font-size: 10px }, breaking the site layout on other pages.
+  We apply this class to <html> on non-buy pages to force it back to browser default. (1rem = 16px)
+*/
+.force-platform-font {
+  font-size: 16px !important;
 }

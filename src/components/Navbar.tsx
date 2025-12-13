@@ -26,31 +26,22 @@ export default function Navbar() {
     // AND GLOBAL STYLE GUARD:
     // Jupiter Widget adds inline 'font-size: 10px' to <html> which breaks standard Tailwind 'rem' scaling.
     // We use a MutationObserver to aggressively fight this pollution on non-buy pages.
+    // GLOBAL STYLE GUARD:
+    // Jupiter Widget adds inline 'font-size: 10px' to <html> which breaks standard Tailwind 'rem' scaling.
+    // We use a CSS class with !important to strictly enforce 16px on all non-buy pages.
     useEffect(() => {
         setIsMobileMenuOpen(false);
 
-        if (pathname === '/buy') return;
-
-        // 1. Immediate cleanup
-        document.documentElement.style.removeProperty('font-size');
-        document.documentElement.classList.remove('jup-ag-root');
-
-        // 2. Observer to catch delayed/async injections
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
-                    const html = document.documentElement;
-                    // If font-size is modified to something small (like Jupiter's 10px), kill it.
-                    if (html.style.fontSize && html.style.fontSize !== '16px') { // allowing 16px is fine if we set it
-                        html.style.removeProperty('font-size');
-                    }
-                }
-            });
-        });
-
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
-
-        return () => observer.disconnect();
+        const html = document.documentElement;
+        if (pathname === '/buy') {
+            // Allow Jupiter to own the font-size on the Buy page
+            html.classList.remove('force-platform-font');
+        } else {
+            // Strictly enforce 16px on all other pages
+            html.classList.add('force-platform-font');
+            // Clean up any inline junk left behind
+            html.style.removeProperty('font-size');
+        }
     }, [pathname]);
 
     // Close mobile menu if window resized to desktop width

@@ -64,10 +64,27 @@ export default function Statistics() {
         { value: "16", label: "Community" },
     ];
 
+    // Force grid columns to bypass CSS pollution
+    const [cols, setCols] = useState(3);
+
+    useEffect(() => {
+        const handleResize = () => {
+            // md breakpoint is 768px
+            if (window.innerWidth < 768) setCols(1);
+            else setCols(3);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <section className="relative py-20 border-y border-white/5 bg-black/40 backdrop-blur-sm" ref={ref}>
             <div className="max-w-7xl mx-auto">
-                <div className="grid md:grid-cols-3 gap-8 divide-y md:divide-y-0 divide-white/10">
+                <div
+                    className="grid gap-8 divide-y md:divide-y-0 divide-white/10"
+                    style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+                >
                     {stats.map((stat, index) => (
                         <StatItem
                             key={stat.label}

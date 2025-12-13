@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
 interface NFT {
     id: string;
@@ -18,8 +19,31 @@ interface NFTGalleryClientProps {
 }
 
 export default function NFTGalleryClient({ nfts }: NFTGalleryClientProps) {
+    // Force grid columns based on window width to bypass potential CSS/rem issues
+    const [columns, setColumns] = useState(4); // Default to desktop
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            if (width < 768) setColumns(2);
+            else if (width < 1024) setColumns(3);
+            else setColumns(4);
+        };
+
+        // Initial check
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div
+            className="grid gap-6 transition-all duration-300"
+            style={{
+                gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`
+            }}
+        >
             {nfts.map((nft, index) => (
                 <motion.div
                     key={nft.id}
