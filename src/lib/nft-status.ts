@@ -5,6 +5,8 @@ import { Connection, PublicKey } from '@solana/web3.js';
 const TOKEN_MINTS_FILE = path.join(process.cwd(), 'data', 'nft-mint-mapping.json');
 const CACHE_DURATION = 60 * 1000; // 60 seconds
 let nftStatusCache: Record<string, { sold: boolean; timestamp: number }> = {};
+// Keep track of endpoints we've warned about to avoid log spam during builds
+const rpcWarnedMap: Record<string, boolean> = {};
 
 export async function getNftStatuses(collection: string, requestIds: string[]) {
     // Load mapping from disk, if exists
@@ -31,10 +33,14 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
         }
         const mint = mapping[id];
         if (!mint) {
-            // No mapping — fallback: mark as sold if id number <= 3
+            // No mapping — small pragmatic fallback: mark first few demo ids as sold,
+            // otherwise leave unchecked so we don't accidentally mark as available
             const parts = id.split('-');
             const num = parseInt(parts[1] || '0', 10);
-            results[id] = num <= 3;
+            if (num <= 3) {
+                results[id] = true;
+                nftStatusCache[id] = { sold: true, timestamp: Date.now() };
+            }
             continue;
         }
 
@@ -43,34 +49,41 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                 // mapping value can be either a Solana mint string or an object describing the chain
                 if (typeof mint === 'string') {
                     const pub = new PublicKey(mint);
-                    const supply = await conn.getTokenSupply(pub);
-                    const amountStr = supply?.value?.amount ?? '0';
-                    const amount = BigInt(amountStr || '0');
-                    const sold = amount > BigInt(0);
-                    results[id] = sold;
-                    nftStatusCache[id] = { sold, timestamp: Date.now() };
+                    try {
+                        const supply = await conn.getTokenSupply(pub);
+                        const amountStr = supply?.value?.amount ?? '0';
+                        const amount = BigInt(amountStr || '0');
+                        const sold = amount > BigInt(0);
+                        if (sold) {
+                            results[id] = true;
+                            nftStatusCache[id] = { sold: true, timestamp: Date.now() };
+                        }
+                    } catch (err) {
+                        if (!rpcWarnedMap['solana']) {
+                            console.warn('Solana getTokenSupply failed', ((err as any)?.message || String(err)));
+                            rpcWarnedMap['solana'] = true;
+                        }
+                    }
                     return;
                 }
 
                 // Expect object mapping for EVM chains
                 const mapObj = mint as any;
-                if (mapObj.chain && (mapObj.chain === 'eth' || mapObj.chain === 'abstract' || mapObj.chain === 'polygon' || mapObj.chain === 'base' || mapObj.chain === 'op')) {
+                if (mapObj.chain && mapObj.chain === 'abstract') {
                     const contract = mapObj.contract;
                     const tokenId = mapObj.tokenId || mapObj.index;
                     if (!contract || tokenId === undefined) {
-                        results[id] = false;
-                        nftStatusCache[id] = { sold: false, timestamp: Date.now() };
+                        // Mapping malformed — leave unchecked so the client can retry
+                        if (!rpcWarnedMap['malformed-mapping']) {
+                            console.warn('Malformed mapping for', id, 'contract/tokenId missing');
+                            rpcWarnedMap['malformed-mapping'] = true;
+                        }
                         return;
                     }
 
-                    // Pick RPC for chain
-                    const chain = mapObj.chain;
-                    let rpc = process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL || process.env.NEXT_PUBLIC_RPC_URL;
-                    if (chain === 'abstract') rpc = process.env.NEXT_PUBLIC_ABSTRACT_RPC_URL || rpc || 'https://rpc.abstract.xyz';
-                    if (chain === 'polygon') rpc = process.env.NEXT_PUBLIC_POLYGON_RPC_URL || rpc;
-                    if (chain === 'base') rpc = process.env.NEXT_PUBLIC_BASE_RPC_URL || rpc;
-                    if (chain === 'op') rpc = process.env.NEXT_PUBLIC_OP_MAINNET_RPC_URL || rpc;
-                    if (!rpc) rpc = 'https://cloudflare-eth.com';
+                    // Pick RPC for chain: only Abstract (user-provided or main API)
+                    const rpc = process.env.NEXT_PUBLIC_ABSTRACT_RPC_URL || 'https://api.mainnet.abs.xyz';
+                    const candidates: string[] = [rpc];
 
                     // ownerOf selector and tokenId encode
                     const selector = '0x6352211e'; // ownerOf(uint256)
@@ -78,6 +91,33 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                     const hex = bn.toString(16).padStart(64, '0');
                     const data = selector + hex;
                     try {
+                        // Helper: try endpoints until we get JSON response
+                        const tryRpcFetch = async (endpoints: string[], requestBody: any) => {
+                            for (const e of endpoints) {
+                                try {
+                                    const r = await fetch(e, { method: 'POST', body: JSON.stringify(requestBody), headers: { 'Content-Type': 'application/json' } });
+                                    const txt = await r.text();
+                                    try {
+                                        const parsed = JSON.parse(txt);
+                                        return { parsed, endpoint: e };
+                                    } catch (err) {
+                                        // Response not JSON — continue to next candidate; warn once per endpoint
+                                        if (!rpcWarnedMap[e]) {
+                                            console.warn('eth_call returned non-json response', e, txt?.slice?.(0,160));
+                                            rpcWarnedMap[e] = true;
+                                        }
+                                        continue;
+                                    }
+                                } catch (err) {
+                                    if (!rpcWarnedMap[e]) {
+                                        console.warn('rpc endpoint fetch failed', e, ((err as any)?.message || String(err)));
+                                        rpcWarnedMap[e] = true;
+                                    }
+                                    continue;
+                                }
+                            }
+                            return { parsed: null, endpoint: null };
+                        };
                         const body = {
                             jsonrpc: '2.0',
                             id: 1,
@@ -87,16 +127,16 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                                 'latest',
                             ],
                         };
-                        const resp = await fetch(rpc, { method: 'POST', body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' } });
-                        const text = await resp.text();
-                        let json: any = null;
-                        let hasWarned = false;
-                        try { json = JSON.parse(text); } catch (e) {
-                            if (!hasWarned) {
-                                console.warn('eth_call returned non-json response', rpc, text?.slice?.(0,160));
-                                hasWarned = true;
+                        const { parsed: json } = await tryRpcFetch(candidates, body) as any;
+                        // If we failed to parse any RPC response (json === null), skip marking status so client can retry
+                        if (!json) {
+                            if (!rpcWarnedMap['no-abstract-rpc']) {
+                                console.warn('No working Abstract RPC endpoint found; leave tokens unchecked. Set NEXT_PUBLIC_ABSTRACT_RPC_URL to a working endpoint.');
+                                rpcWarnedMap['no-abstract-rpc'] = true;
                             }
+                            return;
                         }
+
                         const result = json?.result;
                         let sold = !!(result && result !== '0x' && result !== '0x0000000000000000000000000000000000000000000000000000000000000000');
 
@@ -115,72 +155,41 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                                         'latest',
                                     ],
                                 };
-                                const resp2 = await fetch(rpc, { method: 'POST', body: JSON.stringify(body2), headers: { 'Content-Type': 'application/json' } });
-                                const text2 = await resp2.text();
-                                let json2: any = null;
-                                let hasWarned2 = false;
-                                try { json2 = JSON.parse(text2); } catch (e) {
-                                    if (!hasWarned2) {
-                                        console.warn('tokenURI returned non-json response', rpc, text2?.slice?.(0,160));
-                                        hasWarned2 = true;
-                                    }
-                                }
+                                const { parsed: json2 } = await tryRpcFetch(candidates, body2) as any;
                                 const res2 = json2?.result;
                                 // If tokenURI returns something non-empty, assume token minted
                                 if (res2 && res2 !== '0x') {
                                     sold = true;
                                 }
                             } catch (err2) {
-                                console.warn('tokenURI check failed for', contract, tokenId, err2);
-                            }
-                        }
-
-                        results[id] = sold;
-                        nftStatusCache[id] = { sold, timestamp: Date.now() };
-                        // If still not sold and an Alchemy API key is provided, try Alchemy NFT API for owners
-                        if (!sold) {
-                            const alchemyKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || process.env.ALCHEMY_API_KEY;
-                            // Only attempt Alchemy for chains it supports
-                            const alchemyChains = ['eth', 'polygon', 'base', 'op'];
-                            if (alchemyKey && alchemyChains.includes(chain)) {
-                                try {
-                                    const network = chain === 'polygon' ? 'polygon-mainnet' : 'eth-mainnet';
-                                    const endpoint = `https://eth-${network}.g.alchemy.com/nft/v2/${alchemyKey}/getOwnersForToken?contractAddress=${contract}&tokenId=${tokenId}`;
-                                    const resp3 = await fetch(endpoint);
-                                    const text3 = await resp3.text();
-                                    let json3: any = null;
-                                    let hasWarned3 = false;
-                                    try { json3 = JSON.parse(text3); } catch (e) {
-                                        if (!hasWarned3) {
-                                            console.warn('Alchemy returned non-json response', endpoint, text3?.slice?.(0,160));
-                                            hasWarned3 = true;
-                                        }
-                                    }
-                                    const owners = json3?.owners || [];
-                                    if (owners.length > 0) {
-                                        results[id] = true;
-                                        nftStatusCache[id] = { sold: true, timestamp: Date.now() };
-                                        sold = true;
-                                    }
-                                } catch (err3) {
-                                    console.warn('Alchemy fallback failed', err3);
+                                if (!rpcWarnedMap[contract]) {
+                                    console.warn('tokenURI check failed for', contract, tokenId, ((err2 as any)?.message || String(err2)));
+                                    rpcWarnedMap[contract] = true;
                                 }
                             }
                         }
+
+                        if (sold) {
+                            results[id] = true;
+                            nftStatusCache[id] = { sold: true, timestamp: Date.now() };
+                        }
                         return;
                     } catch (err) {
-                        console.error('eth_call failed for', contract, tokenId, err);
-                        results[id] = false;
-                        nftStatusCache[id] = { sold: false, timestamp: Date.now() };
+                        if (!rpcWarnedMap[contract]) {
+                            console.error('eth_call failed for', contract, tokenId, ((err as any)?.message || String(err)));
+                            rpcWarnedMap[contract] = true;
+                        }
+                        // On RPC errors, leave token unchecked so client can retry
                         return;
                     }
                 }
                 // (No-op here; specific branches already wrote to results)
             } catch (err) {
-                console.error('Failed to check token supply for', mint, err);
-                // On error, set false (unsold)
-                results[id] = false;
-                nftStatusCache[id] = { sold: false, timestamp: Date.now() };
+                if (!rpcWarnedMap['supply-failed']) {
+                    console.error('Failed to check token supply for', mint, ((err as any)?.message || String(err)));
+                    rpcWarnedMap['supply-failed'] = true;
+                }
+                // On unexpected errors, leave unchecked so client can retry
             }
         })());
     }

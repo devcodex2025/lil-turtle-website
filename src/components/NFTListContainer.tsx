@@ -27,7 +27,7 @@ export default async function NFTListContainer() {
             image: `/nfts/${col.name.toLowerCase().includes('crown') ? 'crown' : 'mini'}/${i + 1}.${col.ext}`,
             collection: col.name,
             rarity: i < 5 ? 'Legendary' : i < 10 ? 'Rare' : 'Common',
-            isSold: false,
+            isSold: undefined,
             isSoldChecked: false,
         }))
     );

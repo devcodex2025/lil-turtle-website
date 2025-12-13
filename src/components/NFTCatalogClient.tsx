@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
 import NFTGalleryClient from "./NFTGalleryClient";
 
@@ -12,6 +12,7 @@ interface NFT {
     rarity: string;
     isSold?: boolean;
     isSoldChecked?: boolean;
+    isSoldCheckFailed?: boolean;
 }
 
 export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
@@ -45,7 +46,7 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
         router.replace(newUrl, { scroll: false });
     }, [filter, sort, router]);
 
-    const [items, setItems] = useState<NFT[]>(() => nfts.map(n => ({ ...n, isSold: n.isSold ?? false, isSoldChecked: n.isSoldChecked ?? false })));
+    const [items, setItems] = useState<NFT[]>(() => nfts.map(n => ({ ...n, isSold: n.isSold, isSoldChecked: n.isSoldChecked ?? false })));
 
     const filtered = useMemo(() => {
         let result = [...items];
@@ -69,33 +70,71 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
         return result;
     }, [items, filter, sort]);
 
-    // Fetch on-chain sold status for visible NFTs
+    // Fetch on-chain sold status only once after initial mount
+    const checkedOnce = useRef(false);
     useEffect(() => {
         let cancelled = false;
         (async () => {
             try {
-                // Skip fetching if all filtered items were already checked server-side
-                const needCheck = filtered.some(f => !f.isSoldChecked);
-                if (!needCheck) return;
-                const ids = filtered.map(f => f.id).join(',');
+                // Prevent repeated checks while navigating/filtering — only run once per page load
+                if (checkedOnce.current) return;
+                checkedOnce.current = true;
+                // Snapshot the initial filtered list to avoid re-checking when filter/sort changes
+                const initialFiltered = filtered;
+                // Skip fetching if all initial items were already checked server-side
+                const needCheck = initialFiltered.some(f => !f.isSoldChecked);
+                if (!needCheck) return; // nothing to check: all visible items already have isSoldChecked
+
+                const ids = initialFiltered.map(f => f.id).join(',');
                 if (!ids) return;
                 // derive collection from first id (Mini-1, Crown-1)
-                const col = filtered[0]?.id?.split('-')[0] || 'Mini';
-                const res = await fetch(`/api/nfts/status?collection=${encodeURIComponent(col)}&ids=${encodeURIComponent(ids)}`);
-                if (!res.ok) return;
-                const json = await res.json();
-                const results: Record<string, boolean> = json.results || {};
-                if (cancelled) return;
-                setItems(prev => prev.map(it => ({ ...it, isSold: results[it.id] ?? it.isSold, isSoldChecked: (results[it.id] !== undefined) || it.isSoldChecked })));
+                // Group ids by collection prefix and fetch per group to isolate failures
+                const groups: Record<string, string[]> = {};
+                for (const id of initialFiltered.map(f => f.id)) {
+                    const prefix = id.split('-')[0];
+                    if (!groups[prefix]) groups[prefix] = [];
+                    groups[prefix].push(id);
+                }
+
+                const fetchGroup = async (prefix: string, idsArr: string[]) => {
+                    const idsStr = idsArr.join(',');
+                    const maxAttempts = 3;
+                    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+                        try {
+                            const res = await fetch(`/api/nfts/status?collection=${encodeURIComponent(prefix)}&ids=${encodeURIComponent(idsStr)}`);
+                            if (!res.ok) throw new Error('Failed request');
+                            const json = await res.json();
+                            const results: Record<string, boolean> = json.results || {};
+                            if (cancelled) return;
+                            setItems(prev => prev.map(it => ({ ...it, isSold: results[it.id] ?? it.isSold, isSoldChecked: (results[it.id] !== undefined) || it.isSoldChecked })));
+                            const returnedCount = Object.keys(results).length;
+                            if (returnedCount >= idsArr.length) return; // all good
+                            await new Promise(r => setTimeout(r, 300 * attempt));
+                        } catch (err) {
+                            if (attempt === maxAttempts) {
+                                // Give up for this group; mark items as checked but with failed flag so UI can show 'Unknown'
+                                setItems(prev => prev.map(it => (idsArr.includes(it.id) ? { ...it, isSoldChecked: true, isSoldCheckFailed: true } : it)));
+                                return;
+                            }
+                            await new Promise(r => setTimeout(r, 300 * attempt));
+                        }
+                    }
+                };
+
+                await Promise.all(Object.entries(groups).map(([prefix, idsArr]) => fetchGroup(prefix, idsArr)));
             } catch {
                 // ignore fetch errors — keep demo values
             }
         })();
         return () => { cancelled = true; };
-    }, [filtered]);
+    }, []);
 
     return (
         <div>
+            {/* Status check indicator */}
+            {filtered.some(f => !f.isSoldChecked) && (
+                <div className="text-center text-sm text-gray-400 mb-4">Checking on-chain status...</div>
+            )}
             <div className="flex flex-wrap justify-center gap-4 mb-6">
                 <button
                     onClick={() => setFilter('All')}

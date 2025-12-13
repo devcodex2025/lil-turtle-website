@@ -1,8 +1,6 @@
 const fetch = global.fetch || require('node-fetch');
 const rpcCandidates = [
-  process.env.NEXT_PUBLIC_ABSTRACT_RPC_URL,
-  'https://rpc.abstract.xyz',
-  'https://cloudflare-eth.com',
+  process.env.NEXT_PUBLIC_ABSTRACT_RPC_URL || 'https://api.mainnet.abs.xyz',
 ].filter(Boolean);
 
 let rpc = rpcCandidates[0];
