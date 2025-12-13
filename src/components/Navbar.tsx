@@ -23,8 +23,34 @@ export default function Navbar() {
     const isBuyPage = pathname === "/buy";
 
     // Close mobile menu when route changes (prevent stale open state after navigation)
+    // AND GLOBAL STYLE GUARD:
+    // Jupiter Widget adds inline 'font-size: 10px' to <html> which breaks standard Tailwind 'rem' scaling.
+    // We use a MutationObserver to aggressively fight this pollution on non-buy pages.
     useEffect(() => {
         setIsMobileMenuOpen(false);
+
+        if (pathname === '/buy') return;
+
+        // 1. Immediate cleanup
+        document.documentElement.style.removeProperty('font-size');
+        document.documentElement.classList.remove('jup-ag-root');
+
+        // 2. Observer to catch delayed/async injections
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+                    const html = document.documentElement;
+                    // If font-size is modified to something small (like Jupiter's 10px), kill it.
+                    if (html.style.fontSize && html.style.fontSize !== '16px') { // allowing 16px is fine if we set it
+                        html.style.removeProperty('font-size');
+                    }
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+
+        return () => observer.disconnect();
     }, [pathname]);
 
     // Close mobile menu if window resized to desktop width
@@ -204,4 +230,5 @@ export default function Navbar() {
         </motion.nav>
     );
 }
+
 

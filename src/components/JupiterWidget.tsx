@@ -5,6 +5,10 @@ import "@jup-ag/plugin/css";
 
 export default function JupiterWidget() {
     useEffect(() => {
+        // Capture original font size (usually 16px) to fix Jupiter pollution (which sets it to 10px)
+        const html = document.documentElement;
+        const originalFontSize = window.getComputedStyle(html).fontSize;
+
         // Dynamically import the plugin to avoid SSR issues
         import("@jup-ag/plugin").then((mod) => {
             const { init } = mod;
@@ -32,6 +36,13 @@ export default function JupiterWidget() {
             };
             init(cfg as unknown as object);
         }).catch((err) => console.error("Failed to load Jupiter Plugin", err));
+
+        // Cleanup: Restore font size on unmount
+        return () => {
+            if (originalFontSize) {
+                html.style.fontSize = originalFontSize;
+            }
+        };
     }, []);
 
     return (
