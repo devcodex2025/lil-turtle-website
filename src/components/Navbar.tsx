@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
 import Image from "next/image";
@@ -12,6 +12,7 @@ const ConnectButton = dynamic(() => import('./ConnectButton'), { ssr: false });
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const firstMenuLinkRef = useRef<HTMLAnchorElement | null>(null);
     const pathname = usePathname();
     const isBuyPage = pathname === "/buy";
 
@@ -23,6 +24,19 @@ export default function Navbar() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    // Close menu on Escape and focus first link when opened
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setIsMobileMenuOpen(false);
+        };
+
+        document.addEventListener('keydown', onKey);
+        if (isMobileMenuOpen && firstMenuLinkRef.current) {
+            setTimeout(() => firstMenuLinkRef.current?.focus(), 50);
+        }
+        return () => document.removeEventListener('keydown', onKey);
+    }, [isMobileMenuOpen]);
 
     const navLinks = [
         { name: "About", href: "/#about" },
@@ -91,12 +105,14 @@ export default function Navbar() {
                         animate={{ opacity: 1, height: "100vh" }}
                         exit={{ opacity: 0, height: 0 }}
                         className="md:hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-40 pt-32 px-6"
+                        onClick={() => setIsMobileMenuOpen(false)}
                     >
-                        <div className="flex flex-col gap-8 text-center">
-                            {navLinks.map((link) => (
+                        <div className="flex flex-col gap-8 text-center" onClick={(e) => e.stopPropagation()}>
+                            {navLinks.map((link, idx) => (
                                 <a
                                     key={link.name}
                                     href={link.href}
+                                    ref={idx === 0 ? firstMenuLinkRef : undefined}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className="text-3xl font-black text-white hover:text-primary-green transition-colors"
                                 >

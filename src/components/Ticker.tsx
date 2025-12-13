@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 export default function Ticker() {
     const text = "LIL TURTLE • TWO NFT COLLECTIONS ON ABSTRACT • MEMECOIN ON SOLANA ";
@@ -14,8 +15,8 @@ export default function Ticker() {
                 }}
             />
 
-            {/* Scrolling Text */}
-            <div className="relative flex whitespace-nowrap overflow-hidden">
+            {/* Scrolling Text (clickable) */}
+            <Link href="/buy" aria-label="Buy Lil Turtle token" className="relative flex whitespace-nowrap overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-gold rounded">
                 <div className="animate-slide flex">
                     <span className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-green via-primary-gold to-primary-green pr-8">
                         {repeatedText}
@@ -24,7 +25,7 @@ export default function Ticker() {
                         {repeatedText}
                     </span>
                 </div>
-            </div>
+            </Link>
         </section>
     );
 }

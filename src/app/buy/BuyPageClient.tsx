@@ -8,12 +8,16 @@ import { fetchTokenInfo, TokenInfo } from "@/services/tokenData";
 import { useState, useEffect } from "react";
 import JupiterWidget from "@/components/JupiterWidget";
 
-export default function BuyPageClient() {
-    const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null);
+export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: TokenInfo | null }) {
+    const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(initialTokenInfo);
 
+    const formatCurrency = (value: number) => {
+        if (value >= 1000000) return `$${(value / 1000000).toFixed(2)}M`;
+        if (value >= 1000) return `$${(value / 1000).toFixed(2)}K`;
+        return `$${value.toFixed(2)}`;
+    };
 
-
-    // Fetch token info
+    // Keep periodic updates client-side without blocking server render
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -23,16 +27,9 @@ export default function BuyPageClient() {
                 console.error("Error loading token data:", e);
             }
         };
-        loadData();
         const interval = setInterval(loadData, 60000); // Update every minute
         return () => clearInterval(interval);
     }, []);
-
-    const formatCurrency = (value: number) => {
-        if (value >= 1000000) return `$${(value / 1000000).toFixed(2)}M`;
-        if (value >= 1000) return `$${(value / 1000).toFixed(2)}K`;
-        return `$${value.toFixed(2)}`;
-    };
 
     return (
         <main className="min-h-screen bg-bg-dark">
@@ -85,7 +82,7 @@ export default function BuyPageClient() {
                         transition={{ delay: 0.4 }}
                         className="lg:col-span-1"
                     >
-                        <div className="glass-card p-4 rounded-3xl sticky top-32 border border-primary-gold/20 overflow-hidden">
+                        <div className="glass-card p-4 rounded-3xl lg:sticky top-24 border border-primary-gold/20 overflow-hidden">
                             <h2 className="text-xl font-bold text-white mb-4 px-4">Swap Token</h2>
                             {/* Jupiter Terminal Container */}
                             <JupiterWidget />

@@ -35,8 +35,8 @@ function LoadingBox() {
 
 export default function Turtle3DViewer() {
     return (
-        <div className="w-full h-[80vh] relative">
-            <Canvas>
+        <div className="w-full h-[80vh] relative" style={{ touchAction: 'pan-y' as const }}>
+            <Canvas style={{ touchAction: 'pan-y' }}>
                 <PerspectiveCamera makeDefault position={[0, 1, 18]} fov={45} />
                 <Suspense fallback={<LoadingBox />}>
                     <ambientLight intensity={1} />

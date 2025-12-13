@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { fetchTokenInfo, TokenInfo } from "@/services/tokenData";
@@ -24,12 +25,13 @@ export default function PriceWidget() {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="fixed top-24 right-6 z-40 hidden md:flex items-center gap-3 px-4 py-2 glass-card rounded-full border border-primary-green/30 hover:border-primary-green transition-colors cursor-pointer group"
-        >
+        <Link href="/buy" aria-label="Buy Lil Turtle token">
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 }}
+                className="fixed top-24 right-6 z-40 hidden md:flex items-center gap-3 px-4 py-2 glass-card rounded-full border border-primary-green/30 hover:border-primary-green transition-colors cursor-pointer group"
+            >
             <div className="w-2 h-2 rounded-full bg-primary-green animate-pulse" />
 
             <div className="flex flex-col">
@@ -50,5 +52,6 @@ export default function PriceWidget() {
                 </div>
             )}
         </motion.div>
+        </Link>
     );
 }

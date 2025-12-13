@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import BuyPageClient from "./BuyPageClient";
+import { fetchTokenInfo } from "@/services/tokenData";
 
 export const metadata: Metadata = {
     title: "Buy $LILTURTLE Token - Lil Turtle Memecoin on Solana",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
     },
 };
 
-export default function BuyPage() {
-    return <BuyPageClient />;
+export default async function BuyPage() {
+    const tokenInfo = await fetchTokenInfo();
+    return <BuyPageClient initialTokenInfo={tokenInfo} />;
 }

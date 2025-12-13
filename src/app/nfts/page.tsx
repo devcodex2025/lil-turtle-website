@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import NFTGalleryClient from "@/components/NFTGalleryClient";
+import NFTCatalogClient from "@/components/NFTCatalogClient";
 
 export const metadata: Metadata = {
     title: "NFT Gallery - Lil Turtle | Abstract Turtle NFT Collection",
@@ -33,7 +33,7 @@ const collections = [
 ];
 
 // Generate full list of NFTs on server
-const allNFTs = collections.flatMap(col =>
+const allNFTS = collections.flatMap(col =>
     Array.from({ length: col.size }).map((_, i) => ({
         id: `${col.prefix}-${i + 1}`,
         title: `${col.name} #${i + 1}`,
@@ -41,6 +41,7 @@ const allNFTs = collections.flatMap(col =>
         image: `/nfts/${col.name.toLowerCase().includes('crown') ? 'crown' : 'mini'}/${i + 1}.${col.ext}`,
         collection: col.name,
         rarity: i < 5 ? "Legendary" : i < 10 ? "Rare" : "Common",
+        isSold: i < 3, // mark first few items sold for UI state demonstration
     }))
 );
 
@@ -62,23 +63,8 @@ export default function NFTGallery() {
                         </p>
                     </div>
 
-                    {/* Filters */}
-                    <div className="flex flex-wrap justify-center gap-4 mb-12">
-                        {['All', 'Mini Collection', 'Crown Collection'].map((filter, i) => (
-                            <button
-                                key={filter}
-                                className={`px-6 py-2 rounded-full border ${i === 0
-                                    ? 'bg-primary-green text-black border-primary-green'
-                                    : 'border-white/10 text-gray-400 hover:border-primary-green hover:text-white'
-                                    } transition-all font-bold`}
-                            >
-                                {filter}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Grid - Client Component */}
-                    <NFTGalleryClient nfts={allNFTs} />
+                    {/* Filters + Sort + Grid */}
+                    <NFTCatalogClient nfts={allNFTS} />
                 </div>
             </section>
 

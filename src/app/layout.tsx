@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lil Turtle - Premium Memecoin & NFT Collection",
     description: "Join the elite Lil Turtle community on Solana. Exclusive NFTs and community-driven tokenomics.",
-    images: ["/logo.png"],
+    images: ["/og-home.png"],
   },
   icons: {
     icon: [
