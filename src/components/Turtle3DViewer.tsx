@@ -7,7 +7,7 @@ import * as THREE from "three";
 
 function TurtleModel() {
     // Load the GLB model (with embedded materials and textures)
-    const { scene } = useGLTF("/3d/colorfull_glb/base_basic_pbr.glb");
+    const { scene } = useGLTF("/3d/colorfull_glb/compressed_3d_model_lil_turtle.glb");
     const groupRef = useRef<THREE.Group>(null);
 
     useFrame((state) => {

@@ -1,7 +1,4 @@
-"use client";
-
-import { motion } from "framer-motion";
-import Turtle3DViewer from "./Turtle3DViewer";
+import HeroClient from "./HeroClient";
 
 export default function Hero() {
     return (
@@ -14,12 +11,7 @@ export default function Hero() {
 
             <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
                 {/* Text Content */}
-                <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="text-center lg:text-left"
-                >
+                <div className="text-center lg:text-left">
                     <div className="inline-block px-4 py-2 rounded-full glass-card mb-6 border border-primary-green/30">
                         <span className="text-primary-green font-bold tracking-wider text-sm uppercase">
                             Community Driven Token
@@ -51,23 +43,10 @@ export default function Hero() {
                             Buy Token
                         </a>
                     </div>
-                </motion.div>
+                </div>
 
-                {/* 3D Model Viewer */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8, rotate: 10 }}
-                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
-                    className="relative"
-                >
-                    <div className="relative z-10">
-                        <Turtle3DViewer />
-                    </div>
-
-                    {/* Decorative Ring */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-primary-green/20 rounded-full animate-[spin_20s_linear_infinite]" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] border border-primary-gold/10 rounded-full animate-[spin_30s_linear_infinite_reverse]" />
-                </motion.div>
+                {/* 3D Model Viewer – client component */}
+                <HeroClient />
             </div>
 
             {/* Scroll Indicator Removed */}
