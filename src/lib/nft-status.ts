@@ -57,6 +57,9 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                         if (sold) {
                             results[id] = true;
                             nftStatusCache[id] = { sold: true, timestamp: Date.now() };
+                        } else {
+                            results[id] = false;
+                            nftStatusCache[id] = { sold: false, timestamp: Date.now() };
                         }
                     } catch (err) {
                         if (!rpcWarnedMap['solana']) {
@@ -103,7 +106,7 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                                     } catch (err) {
                                         // Response not JSON — continue to next candidate; warn once per endpoint
                                         if (!rpcWarnedMap[e]) {
-                                            console.warn('eth_call returned non-json response', e, txt?.slice?.(0,160));
+                                            console.warn('eth_call returned non-json response', e, txt?.slice?.(0, 160));
                                             rpcWarnedMap[e] = true;
                                         }
                                         continue;
@@ -172,6 +175,9 @@ export async function getNftStatuses(collection: string, requestIds: string[]) {
                         if (sold) {
                             results[id] = true;
                             nftStatusCache[id] = { sold: true, timestamp: Date.now() };
+                        } else {
+                            results[id] = false;
+                            nftStatusCache[id] = { sold: false, timestamp: Date.now() };
                         }
                         return;
                     } catch (err) {

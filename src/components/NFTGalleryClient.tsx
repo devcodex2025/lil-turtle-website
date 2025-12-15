@@ -45,7 +45,8 @@ export default function NFTGalleryClient({ nfts }: NFTGalleryClientProps) {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: nft.isSold ? 0.6 : 1, scale: 1 }}
                     transition={{ delay: index * 0.05 }}
-                    className={`glass-card p-3 rounded-2xl group hover:-translate-y-2 transition-transform duration-300 border border-white/5 hover:border-primary-green/50 ${nft.isSold ? 'filter grayscale pointer-events-none opacity-70' : ''}`}
+                    className={`glass-card p-3 rounded-2xl group hover:-translate-y-2 transition-transform duration-300 border border-white/5 hover:border-primary-green/50 ${nft.isSold ? 'pointer-events-none opacity-70' : ''}`}
+                    style={{ filter: nft.isSold ? 'grayscale(100%)' : 'none' }}
                 >
                     <div className="relative aspect-square rounded-xl overflow-hidden mb-4 bg-black/50">
                         <Image

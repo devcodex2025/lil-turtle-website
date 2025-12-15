@@ -71,30 +71,26 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
     }, [items, filter, sort]);
 
     // Fetch on-chain sold status only once after initial mount
-    const checkedOnce = useRef(false);
     const [initialCheckRunning, setInitialCheckRunning] = useState(false);
     const [initialCheckComplete, setInitialCheckComplete] = useState(false);
     useEffect(() => {
         let cancelled = false;
         (async () => {
             try {
-                // Prevent repeated checks while navigating/filtering — only run once per page load
-                if (checkedOnce.current) return;
-                checkedOnce.current = true;
-                setInitialCheckRunning(false);
-                // Snapshot the initial filtered list to avoid re-checking when filter/sort changes
-                const initialFiltered = filtered;
-                // Skip fetching if all initial items were already checked server-side
-                const needCheck = initialFiltered.some(f => !f.isSoldChecked);
-                if (!needCheck) return; // nothing to check: all visible items already have isSoldChecked
+                // Snapshot the full items list to ensure we check everything regardless of current filter
+                // This ensures that if user switches tab later, data is already ready
+                const targets = items;
+                // Skip fetching if all items were already checked server-side
+                const needCheck = targets.some(f => !f.isSoldChecked);
+                if (!needCheck) return; // nothing to check: all items already have isSoldChecked
                 setInitialCheckRunning(true);
 
-                const ids = initialFiltered.map(f => f.id).join(',');
+                const ids = targets.map(f => f.id).join(',');
                 if (!ids) return;
                 // derive collection from first id (Mini-1, Crown-1)
                 // Group ids by collection prefix and fetch per group to isolate failures
                 const groups: Record<string, string[]> = {};
-                for (const id of initialFiltered.map(f => f.id)) {
+                for (const id of targets.map(f => f.id)) {
                     const prefix = id.split('-')[0];
                     if (!groups[prefix]) groups[prefix] = [];
                     groups[prefix].push(id);
@@ -105,7 +101,10 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
                     const maxAttempts = 3;
                     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
                         try {
-                            const res = await fetch(`/api/nfts/status?collection=${encodeURIComponent(prefix)}&ids=${encodeURIComponent(idsStr)}`);
+                            const res = await fetch(`/api/nfts/status?collection=${encodeURIComponent(prefix)}&ids=${encodeURIComponent(idsStr)}`, {
+                                cache: 'no-store',
+                                headers: { 'Cache-Control': 'no-cache' }
+                            });
                             if (!res.ok) throw new Error('Failed request');
                             const json = await res.json();
                             const results: Record<string, boolean> = json.results || {};
@@ -126,8 +125,10 @@ export default function NFTCatalogClient({ nfts }: { nfts: NFT[] }) {
                 };
 
                 await Promise.all(Object.entries(groups).map(([prefix, idsArr]) => fetchGroup(prefix, idsArr)));
-                setInitialCheckRunning(false);
-                setInitialCheckComplete(true);
+                if (!cancelled) {
+                    setInitialCheckRunning(false);
+                    setInitialCheckComplete(true);
+                }
             } catch {
                 // ignore fetch errors — keep demo values
             }

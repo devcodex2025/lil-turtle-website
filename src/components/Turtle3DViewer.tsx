@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, useGLTF, Html } from "@react-three/drei";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 
 function TurtleModel() {
@@ -42,12 +42,21 @@ function LoadingBox() {
 }
 
 export default function Turtle3DViewer() {
-    const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || window.matchMedia?.('(pointer: coarse)').matches);
     const [allowRotate, setAllowRotate] = useState(false);
 
+    // When rotation is NOT explicitly allowed, 
+    // we disable pointer events on the canvas so the user can scroll the page naturally.
+    const enableInteraction = allowRotate;
+
     return (
-        <div className="w-full h-[80vh] relative" style={{ touchAction: 'pan-y' }}>
-            <Canvas style={{ touchAction: 'pan-y' }}>
+        <div className="w-full h-[80vh] relative">
+            <Canvas
+                className={!enableInteraction ? "pointer-events-none" : "cursor-grab active:cursor-grabbing"}
+                style={{
+                    touchAction: enableInteraction ? 'none' : 'pan-y',
+                    pointerEvents: enableInteraction ? 'auto' : 'none'
+                }}
+            >
                 <PerspectiveCamera makeDefault position={[0, 1, 18]} fov={45} />
                 <Suspense fallback={<LoadingBox />}>
                     <ambientLight intensity={1} />
@@ -57,7 +66,7 @@ export default function Turtle3DViewer() {
                     <TurtleModel />
                     <OrbitControls
                         enableZoom={false}
-                        enableRotate={!isTouch || allowRotate}
+                        enableRotate={enableInteraction}
                         enablePan={false}
                         minAzimuthAngle={-Math.PI / 6} // Limit left rotation (30 deg)
                         maxAzimuthAngle={Math.PI / 6}  // Limit right rotation (30 deg)
@@ -67,16 +76,17 @@ export default function Turtle3DViewer() {
                 </Suspense>
             </Canvas>
 
-            {/* Small toggle for enabling rotation on touch devices to avoid hijacking scroll */}
-            {isTouch && (
-                <button
-                    className={`absolute left-4 bottom-4 bg-black/60 text-white px-3 py-2 rounded-full text-xs font-bold border border-white/10 ${allowRotate ? 'bg-primary-green text-black' : ''}`}
-                    onClick={() => setAllowRotate(!allowRotate)}
-                    aria-pressed={allowRotate}
-                >
-                    {allowRotate ? 'Manual rotate: ON' : 'Manual rotate: OFF'}
-                </button>
-            )}
+            {/* Toggle for enabling rotation to avoid hijacking scroll */}
+            <button
+                className={`absolute left-4 bottom-4 px-3 py-2 rounded-full text-xs font-bold border border-white/10 transition-colors z-10 ${allowRotate
+                    ? 'bg-primary-green text-black'
+                    : 'bg-black/60 text-white hover:bg-black/80'
+                    }`}
+                onClick={() => setAllowRotate(!allowRotate)}
+                aria-pressed={allowRotate}
+            >
+                {allowRotate ? 'Disable Rotate (Enable Scroll)' : 'Enable Rotate'}
+            </button>
         </div>
     );
 }
