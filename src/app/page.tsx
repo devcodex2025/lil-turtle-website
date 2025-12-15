@@ -15,7 +15,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Lil Turtle - Premium Memecoin & NFT Collection",
     description: "Join the elite Lil Turtle community. Exclusive NFTs and community-driven tokenomics on Solana.",
-    images: ["/logo.png"],
+    images: ["/og-home.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lil Turtle - Premium Memecoin & NFT Collection",
+    description: "Join the elite Lil Turtle community. Exclusive NFTs and community-driven tokenomics on Solana.",
+    images: ["/og-home.png"],
   },
 };
 
