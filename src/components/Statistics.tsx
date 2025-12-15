@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import useMinWidth from '../hooks/useMinWidth';
 
 interface StatItemProps {
     value: string;
@@ -67,16 +68,11 @@ export default function Statistics() {
     // Force grid columns to bypass CSS pollution
     const [cols, setCols] = useState(3);
 
+    const gte768 = useMinWidth(768);
     useEffect(() => {
-        const handleResize = () => {
-            // md breakpoint is 768px
-            if (window.innerWidth < 768) setCols(1);
-            else setCols(3);
-        };
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+        if (!gte768) setCols(1);
+        else setCols(3);
+    }, [gte768]);
 
     return (
         <section className="relative py-20 border-y border-white/5 bg-black/40 backdrop-blur-sm" ref={ref}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import useMinWidth from '../hooks/useMinWidth';
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
 import Image from "next/image";
@@ -34,29 +35,51 @@ export default function Navbar() {
 
         const html = document.documentElement;
         if (pathname === '/buy') {
-            // Allow Jupiter to own the font-size on the Buy page
+            // Remove server-set class so Jupiter can control the font-size on buy page
             html.classList.remove('force-platform-font');
-        } else {
-            // Strictly enforce 16px on all other pages
-            html.classList.add('force-platform-font');
-            // Clean up any inline junk left behind
+            // Also clear any inline font-size that may have been left from before
             html.style.removeProperty('font-size');
+            return;
         }
+
+        // Ensure server-side guard class is present when not on buy page
+        html.classList.add('force-platform-font');
+
+        // Ensure any inline font-size injected by third-party widgets is removed
+        html.style.removeProperty('font-size');
+
+        // Some components rely on window 'resize' to recompute layout after font-size changes
+        // Trigger a resize so listeners re-evaluate breakpoints after we clean up Jupiter's changes
+        try {
+            window.dispatchEvent(new Event('resize'));
+        } catch (e) {
+            // ignore in non-browser environments
+        }
+
+        // Some widgets continuously re-apply inline styles; observe and remove if that happens
+        const observer = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if (m.type === 'attributes' && m.attributeName === 'style') {
+                    if (html.style.fontSize) {
+                        html.style.removeProperty('font-size');
+                        try {
+                            window.dispatchEvent(new Event('resize'));
+                        } catch (e) {
+                            // ignore
+                        }
+                    }
+                }
+            }
+        });
+        observer.observe(html, { attributes: true, attributeFilter: ['style'] });
+        return () => observer.disconnect();
     }, [pathname]);
 
-    // Close mobile menu if window resized to desktop width
+    // Close mobile menu when we are in desktop breakpoint
+    const isDesktop = useMinWidth(768);
     useEffect(() => {
-        const onResize = () => {
-            try {
-                if (window.innerWidth >= 768) setIsMobileMenuOpen(false);
-            } catch (e) {
-                // ignore in non-browser environments
-            }
-        };
-        onResize();
-        window.addEventListener('resize', onResize);
-        return () => window.removeEventListener('resize', onResize);
-    }, []);
+        if (isDesktop) setIsMobileMenuOpen(false);
+    }, [isDesktop]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -139,8 +162,8 @@ export default function Navbar() {
                     </span>
                 </Link>
 
-                {/* Desktop Navigation */}
-                <div className="hidden md:flex nav-desktop-force items-center gap-8">
+                {/* Desktop Navigation (runtime-guarded to avoid transient CSS/media mismatches) */}
+                <div className={`${isDesktop ? 'flex' : 'hidden'} md:flex nav-desktop-force items-center gap-8`}>
                     {NAV_LINKS.map((link) => {
                         const isActive = pathname === link.href || (link.href !== '/#about' && pathname.startsWith(link.href));
                         return (
@@ -161,17 +184,17 @@ export default function Navbar() {
                 {/* Mobile Menu Button */}
                 <button
                     onClick={() => {
-                        try {
-                            if (window.innerWidth < 768) setIsMobileMenuOpen(!isMobileMenuOpen);
-                            else setIsMobileMenuOpen(false);
-                        } catch (e) {
-                            // ignore if window is not defined
-                        }
-                    }}
+                            try {
+                                if (!isDesktop) setIsMobileMenuOpen(!isMobileMenuOpen);
+                                else setIsMobileMenuOpen(false);
+                            } catch (e) {
+                                // ignore if window is not defined
+                            }
+                        }}
                     aria-expanded={isMobileMenuOpen}
                     aria-controls="mobile-menu"
                     aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-                    className="md:hidden nav-mobile-btn-force w-12 h-12 flex items-center justify-center text-white"
+                    className={`${isDesktop ? 'hidden' : 'md:hidden'} nav-mobile-btn-force w-12 h-12 flex items-center justify-center text-white`}
                 >
                     <div className="space-y-2">
                         <span className={`block w-8 h-0.5 bg-white transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2.5' : ''}`} />

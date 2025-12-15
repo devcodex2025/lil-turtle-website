@@ -4,20 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { useState, useEffect } from "react";
+import useMinWidth from '../hooks/useMinWidth';
 
 export default function Footer() {
     // Force grid columns to bypass CSS pollution
     const [cols, setCols] = useState(3);
+    const gte768 = useMinWidth(768);
     useEffect(() => {
-        const handleResize = () => {
-            // md breakpoint is 768px
-            if (window.innerWidth < 768) setCols(1);
-            else setCols(3);
-        };
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+        if (!gte768) setCols(1);
+        else setCols(3);
+    }, [gte768]);
 
     const socialLinks = [
         {

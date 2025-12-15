@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import useMinWidth from '../hooks/useMinWidth';
 
 interface NFT {
     id: string;
@@ -22,20 +23,14 @@ export default function NFTGalleryClient({ nfts }: NFTGalleryClientProps) {
     // Force grid columns based on window width to bypass potential CSS/rem issues
     const [columns, setColumns] = useState(4); // Default to desktop
 
+    // Use matchMedia hooks for robust breakpoints
+    const gte1024 = useMinWidth(1024);
+    const gte768 = useMinWidth(768);
     useEffect(() => {
-        const handleResize = () => {
-            const width = window.innerWidth;
-            if (width < 768) setColumns(2);
-            else if (width < 1024) setColumns(3);
-            else setColumns(4);
-        };
-
-        // Initial check
-        handleResize();
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+        if (!gte768) setColumns(2);
+        else if (!gte1024) setColumns(3);
+        else setColumns(4);
+    }, [gte768, gte1024]);
 
     return (
         <div

@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import useMinWidth from '../hooks/useMinWidth';
 import Image from "next/image";
 
 interface NFTCardProps {
@@ -70,16 +71,11 @@ export default function NFTCollections() {
 
     // Force grid columns to bypass CSS pollution
     const [cols, setCols] = useState(2);
+    const gte768 = useMinWidth(768);
     useEffect(() => {
-        const handleResize = () => {
-            // md breakpoint is 768px
-            if (window.innerWidth < 768) setCols(1);
-            else setCols(2);
-        };
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+        if (!gte768) setCols(1);
+        else setCols(2);
+    }, [gte768]);
 
     const collections = [
         {

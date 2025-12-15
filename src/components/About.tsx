@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import useMinWidth from '../hooks/useMinWidth';
 
 export default function About() {
     const ref = useRef(null);
@@ -16,16 +17,11 @@ export default function About() {
 
     // Force grid columns to bypass CSS pollution
     const [cols, setCols] = useState(2);
+    const gte1024 = useMinWidth(1024);
     useEffect(() => {
-        const handleResize = () => {
-            // lg breakpoint is 1024px
-            if (window.innerWidth < 1024) setCols(1);
-            else setCols(2);
-        };
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+        if (!gte1024) setCols(1);
+        else setCols(2);
+    }, [gte1024]);
 
     return (
         <section id="about" className="relative py-32 px-6 overflow-hidden" ref={ref}>

@@ -5,18 +5,6 @@ import HeroClient from "./HeroClient";
 import { useState, useEffect } from "react";
 
 export default function Hero() {
-    // Force grid columns to bypass CSS pollution
-    const [cols, setCols] = useState(2);
-    useEffect(() => {
-        const handleResize = () => {
-            // lg breakpoint is 1024px
-            if (window.innerWidth < 1024) setCols(1);
-            else setCols(2);
-        };
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
 
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32">
@@ -27,8 +15,7 @@ export default function Hero() {
             </div>
 
             <div
-                className="max-w-7xl mx-auto px-6 relative z-10 grid gap-12 items-center"
-                style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+                className="max-w-7xl mx-auto px-6 relative z-10 grid gap-12 items-center grid-cols-1 lg:grid-cols-2"
             >
                 {/* Text Content */}
                 <div className="text-center lg:text-left">
