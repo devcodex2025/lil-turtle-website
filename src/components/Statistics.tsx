@@ -59,10 +59,31 @@ export default function Statistics() {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+    const [communityCount, setCommunityCount] = useState<string>("16");
+
+    useEffect(() => {
+        // Fetch real twitter follower count
+        fetch('/api/social/twitter')
+            .then(res => res.json())
+            .then(data => {
+                if (data.followers) {
+                    // Format: 1.2K, 10K, etc if needed, or just raw number
+                    // Simple formatter:
+                    const num = data.followers;
+                    let formatted = num.toString();
+                    if (num >= 1000000) formatted = (num / 1000000).toFixed(1) + 'M';
+                    else if (num >= 1000) formatted = (num / 1000).toFixed(1) + 'K';
+
+                    setCommunityCount(formatted);
+                }
+            })
+            .catch(err => console.error('Social stats error:', err));
+    }, []);
+
     const stats = [
         { value: "29%", label: "Turtle Power" },
         { value: "100X", label: "Meme Potential" },
-        { value: "16", label: "Community" },
+        { value: communityCount, label: "Community" },
     ];
 
     // Force grid columns to bypass CSS pollution
