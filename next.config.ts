@@ -16,10 +16,10 @@ const nextConfig: NextConfig = {
         has: [
           {
             type: 'host',
-            value: 'lilturtlenft.fun',
+            value: 'lilturtle.fun',
           },
         ],
-        destination: 'https://www.lilturtlenft.fun/:path*',
+        destination: 'https://www.lilturtle.fun/:path*',
         permanent: true,
       },
     ];

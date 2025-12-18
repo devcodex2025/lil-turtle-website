@@ -10,10 +10,13 @@ const outfit = Outfit({
   display: "swap",
 });
 
+const isDev = process.env.NODE_ENV === 'development';
+const baseUrl = isDev ? 'http://localhost:3000' : 'https://www.lilturtle.fun';
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.lilturtlenft.fun"),
+  metadataBase: new URL(baseUrl),
   alternates: {
-    canonical: "https://www.lilturtlenft.fun",
+    canonical: baseUrl,
   },
   title: "Lil Turtle - Premium Memecoin & NFT Collection on Solana",
   description: "Join the elite Lil Turtle community. Premium memecoin with exclusive NFT collections, community-driven tokenomics, and unique digital assets on Solana blockchain.",
@@ -34,11 +37,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Lil Turtle - Premium Memecoin & NFT Collection",
     description: "Join the elite Lil Turtle community. Exclusive NFTs, community-driven tokenomics, and premium digital assets on Solana.",
-    url: "https://www.lilturtlenft.fun",
+    url: baseUrl,
     siteName: "Lil Turtle",
     images: [
       {
-        url: "https://www.lilturtlenft.fun/og-home.png",
+        url: `${baseUrl}/og-home.png`,
         width: 1200,
         height: 630,
         alt: "Lil Turtle - Premium Memecoin & NFT Collection",
@@ -51,7 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lil Turtle - Premium Memecoin & NFT Collection",
     description: "Join the elite Lil Turtle community on Solana. Exclusive NFTs and community-driven tokenomics.",
-    images: ["https://www.lilturtlenft.fun/og-home.png"],
+    images: [`${baseUrl}/og-home.png`],
     site: "@lilturtlenft",
     creator: "@lilturtlenft",
   },
