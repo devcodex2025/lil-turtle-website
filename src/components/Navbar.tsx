@@ -162,8 +162,8 @@ export default function Navbar() {
                     </span>
                 </Link>
 
-                {/* Desktop Navigation (runtime-guarded to avoid transient CSS/media mismatches) */}
-                <div className={`${isDesktop ? 'flex' : 'hidden'} md:flex nav-desktop-force items-center gap-8`}>
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex nav-desktop-force items-center gap-8">
                     {NAV_LINKS.map((link) => {
                         const isActive = pathname === link.href || (link.href !== '/#about' && pathname.startsWith(link.href));
                         return (
@@ -194,7 +194,7 @@ export default function Navbar() {
                     aria-expanded={isMobileMenuOpen}
                     aria-controls="mobile-menu"
                     aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-                    className={`${isDesktop ? 'hidden' : 'md:hidden'} nav-mobile-btn-force w-12 h-12 flex items-center justify-center text-white`}
+                    className="md:hidden nav-mobile-btn-force w-12 h-12 flex items-center justify-center text-white"
                 >
                     <div className="space-y-2">
                         <span className={`block w-8 h-0.5 bg-white transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2.5' : ''}`} />

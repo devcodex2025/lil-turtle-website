@@ -26,6 +26,33 @@ export default function Footer() {
             ),
         },
         {
+            name: "Meteora",
+            url: "https://www.meteora.ag/dlmm/HSfvyEjGHwGoDrU9AqX6dZ9oUExbTMMiyDgJsEP1RJVW",
+            icon: (
+                <div className="relative w-6 h-6">
+                    <Image src="/logos/meteora-logo.svg" alt="Meteora DEX" fill className="object-contain" />
+                </div>
+            ),
+        },
+        {
+            name: "OpenSea",
+            url: "https://opensea.io/collection/abstract-lil-turtle-mini-collection",
+            icon: (
+                <div className="relative w-6 h-6">
+                    <Image src="/logos/opensea-blue-logo.svg" alt="OpenSea NFT Marketplace" fill className="object-contain" />
+                </div>
+            ),
+        },
+        {
+            name: "Magic Eden",
+            url: "https://magiceden.io/collections/abstract/0x65586ce5cac4bbab88dce0b2d4f399c0e7b70c14",
+            icon: (
+                <div className="relative w-6 h-6 rounded-full overflow-hidden">
+                    <Image src="/logos/magic-eden-logo.png" alt="Magic Eden NFT Marketplace" fill className="object-contain" />
+                </div>
+            ),
+        },
+        {
             name: "Twitter",
             url: "https://x.com/lilturtlenft",
             icon: (
