@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
             userAgent: '*',
             allow: '/',
         },
-        sitemap: 'https://lil-turtle.com/sitemap.xml', // Update with actual domain
+        sitemap: 'https://www.lilturtle.fun/sitemap.xml',
     }
 }
