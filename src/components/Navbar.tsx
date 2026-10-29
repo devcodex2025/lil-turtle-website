@@ -10,7 +10,6 @@ import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
     { name: "About", href: "/#about" },
-    { name: "NFTs", href: "/nfts" },
     { name: "Buy Token", href: "/buy" },
 ];
 

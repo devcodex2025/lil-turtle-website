@@ -38,12 +38,12 @@ export default function TokenLaunch() {
 
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
                         <a
-                            href="https://boop.fun/tokens/14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop"
+                            href="https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="px-10 py-5 bg-primary-gold text-black font-black text-xl rounded-2xl hover:bg-white transition-all duration-300 transform hover:scale-105 glow-gold shadow-xl"
                         >
-                            BUY ON BOOP.FUN
+                            BUY ON PUMP.FUN
                         </a>
 
                         <a

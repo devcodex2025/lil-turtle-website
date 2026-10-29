@@ -17,38 +17,11 @@ export default function Footer() {
 
     const socialLinks = [
         {
-            name: "Boop",
-            url: "https://boop.fun/tokens/14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop",
+            name: "Pump.fun",
+            url: "https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump",
             icon: (
                 <div className="relative w-6 h-6">
-                    <Image src="/boop-logo-32x32.png" alt="Boop.fun - Memecoin Launchpad" fill className="object-contain" />
-                </div>
-            ),
-        },
-        {
-            name: "Meteora",
-            url: "https://www.meteora.ag/dlmm/HSfvyEjGHwGoDrU9AqX6dZ9oUExbTMMiyDgJsEP1RJVW",
-            icon: (
-                <div className="relative w-6 h-6">
-                    <Image src="/logos/meteora-logo.svg" alt="Meteora DEX" fill className="object-contain" />
-                </div>
-            ),
-        },
-        {
-            name: "OpenSea",
-            url: "https://opensea.io/collection/abstract-lil-turtle-mini-collection",
-            icon: (
-                <div className="relative w-6 h-6">
-                    <Image src="/logos/opensea-blue-logo.svg" alt="OpenSea NFT Marketplace" fill className="object-contain" />
-                </div>
-            ),
-        },
-        {
-            name: "Magic Eden",
-            url: "https://magiceden.io/collections/abstract/0x65586ce5cac4bbab88dce0b2d4f399c0e7b70c14",
-            icon: (
-                <div className="relative w-6 h-6 rounded-full overflow-hidden">
-                    <Image src="/logos/magic-eden-logo.png" alt="Magic Eden NFT Marketplace" fill className="object-contain" />
+                    <Image src="/boop-logo-32x32.png" alt="Pump.fun - Memecoin Launchpad" fill className="object-contain" />
                 </div>
             ),
         },
@@ -98,9 +71,6 @@ export default function Footer() {
                         <ul className="space-y-2">
                             <li>
                                 <Link href="/#about" className="text-gray-400 hover:text-primary-green transition-colors">About</Link>
-                            </li>
-                            <li>
-                                <Link href="/nfts" className="text-gray-400 hover:text-primary-green transition-colors">NFT Gallery</Link>
                             </li>
                             <li>
                                 <Link href="/buy" className="text-gray-400 hover:text-primary-green transition-colors">Buy Token</Link>

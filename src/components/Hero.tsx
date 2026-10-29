@@ -42,7 +42,7 @@ export default function Hero() {
                             Explore Ecosystem
                         </a>
                         <a
-                            href="https://boop.fun/tokens/14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop"
+                            href="https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="px-8 py-4 glass-card text-white font-bold text-lg rounded-xl hover:border-primary-gold hover:text-primary-gold transition-all duration-300"

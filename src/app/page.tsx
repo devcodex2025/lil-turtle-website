@@ -2,25 +2,24 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Statistics from "@/components/Statistics";
 import Ticker from "@/components/Ticker";
-import NFTCollections from "@/components/NFTCollections";
 import TokenLaunch from "@/components/TokenLaunch";
 import Footer from "@/components/Footer";
 import PriceWidget from "@/components/PriceWidget";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lil Turtle - Premium Memecoin & NFT Collection on Solana",
-  description: "Join the elite Lil Turtle community. Premium memecoin with exclusive NFT collections on Solana blockchain. Community-driven tokenomics and unique digital assets.",
-  keywords: ["Lil Turtle", "memecoin", "Solana", "NFT", "crypto", "blockchain", "digital art", "Abstract Turtle", "LILTURTLE token"],
+  title: "Lil Turtle - Community Memecoin on Solana",
+  description: "Join the elite Lil Turtle community. Community-driven memecoin on Solana blockchain. Swap instantly on Jupiter and join the movement.",
+  keywords: ["Lil Turtle", "memecoin", "Solana", "crypto", "blockchain", "LILTURTLE token", "$LILTURTLE", "pump.fun", "Jupiter swap"],
   openGraph: {
-    title: "Lil Turtle - Premium Memecoin & NFT Collection",
-    description: "Join the elite Lil Turtle community. Exclusive NFTs and community-driven tokenomics on Solana.",
+    title: "Lil Turtle - Community Memecoin on Solana",
+    description: "Join the elite Lil Turtle community. Community-driven tokenomics on Solana.",
     images: ["/og-home.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lil Turtle - Premium Memecoin & NFT Collection",
-    description: "Join the elite Lil Turtle community. Exclusive NFTs and community-driven tokenomics on Solana.",
+    title: "Lil Turtle - Community Memecoin on Solana",
+    description: "Join the elite Lil Turtle community on Solana blockchain.",
     images: ["/og-home.png"],
   },
 };
@@ -33,7 +32,6 @@ export default function Home() {
       <About />
       <Statistics />
       <Ticker />
-      <NFTCollections />
       <Ticker />
       <TokenLaunch />
       <Footer />

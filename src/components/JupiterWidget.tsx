@@ -19,7 +19,7 @@ export default function JupiterWidget() {
                 formProps: {
                     initialInputMint: "So11111111111111111111111111111111111111112", // SOL
                     fixedOutputMint: true,
-                    initialOutputMint: "14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop", // LIL TURTLE
+                    initialOutputMint: "CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump", // LIL TURTLE
                 } as Record<string, unknown>,
                 // Custom Palette to match site theme
                 palette: {

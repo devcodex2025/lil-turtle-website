@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export default function Ticker() {
-    const text = "LIL TURTLE • TWO NFT COLLECTIONS ON ABSTRACT • MEMECOIN ON SOLANA ";
+    const text = "LIL TURTLE • BUY ON PUMP.FUN • MEMECOIN ON SOLANA ";
     const repeatedText = text.repeat(10);
 
     return (

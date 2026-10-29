@@ -13,7 +13,7 @@ export interface ChartDataPoint {
     value: number;
 }
 
-const TOKEN_ADDRESS = '14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop';
+const TOKEN_ADDRESS = 'CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump';
 
 export async function fetchTokenInfo(): Promise<TokenInfo | null> {
     try {
@@ -24,6 +24,10 @@ export async function fetchTokenInfo(): Promise<TokenInfo | null> {
         if (!tokenData.data || !tokenData.data.attributes) return null;
 
         const tokenAttrs = tokenData.data.attributes;
+
+        // Token still on bonding curve (no pool yet) — return null so UI keeps its default state
+        if (!tokenAttrs.price_usd) return null;
+
         const topPoolId = tokenData.data.relationships?.top_pools?.data?.[0]?.id;
         const pairAddress = topPoolId ? topPoolId.replace('solana_', '') : '';
 

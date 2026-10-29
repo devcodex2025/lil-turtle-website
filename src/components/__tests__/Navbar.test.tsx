@@ -3,14 +3,14 @@ import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import { vi } from 'vitest';
 
 // Mock next/navigation's usePathname
-const usePathnameMock = vi.fn(() => '/nfts');
+const usePathnameMock = vi.fn(() => '/');
 vi.mock('next/navigation', () => ({ usePathname: () => usePathnameMock() }));
 
 import Navbar from '../Navbar';
 
 describe('Navbar mobile menu', () => {
   beforeEach(() => {
-    usePathnameMock.mockReturnValue('/nfts');
+    usePathnameMock.mockReturnValue('/');
     // Simulate mobile viewport by default for these tests
     (global as any).innerWidth = 375;
   });
@@ -56,7 +56,7 @@ describe('Navbar mobile menu', () => {
     // simulate server-side class presence
     document.documentElement.classList.add('force-platform-font');
 
-    usePathnameMock.mockReturnValue('/nfts');
+    usePathnameMock.mockReturnValue('/');
     const { rerender } = render(<Navbar />);
     // non-buy should preserve the class
     expect(document.documentElement.classList.contains('force-platform-font')).toBe(true);
@@ -69,7 +69,7 @@ describe('Navbar mobile menu', () => {
   });
 
   it('removes inline font-size if injected after mount', async () => {
-    usePathnameMock.mockReturnValue('/nfts');
+    usePathnameMock.mockReturnValue('/');
     render(<Navbar />);
 
     // Simulate a third-party widget injecting inline font-size
@@ -80,7 +80,7 @@ describe('Navbar mobile menu', () => {
   });
 
   it('mobile button is hidden on desktop even if html font-size is injected', async () => {
-    usePathnameMock.mockReturnValue('/nfts');
+    usePathnameMock.mockReturnValue('/');
 
     // Simulate desktop viewport
     (global as any).innerWidth = 1400;
@@ -116,7 +116,7 @@ describe('Navbar mobile menu', () => {
     expect(document.documentElement.classList.contains('force-platform-font')).toBe(false);
 
     // Now navigate to non-buy page and simulate desktop viewport
-    usePathnameMock.mockReturnValue('/nfts');
+    usePathnameMock.mockReturnValue('/');
     (global as any).innerWidth = 1400;
 
     await act(async () => rerender(<Navbar />));

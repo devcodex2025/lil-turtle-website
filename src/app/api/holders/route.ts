@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { Connection, PublicKey } from '@solana/web3.js';
 
 // Token address for LIL TURTLE
-const TOKEN_MINT = '14XEVKV9LJJFWc7epbdd1W9E1a1JivB2st8sx4nCboop';
+const TOKEN_MINT = 'CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump';
 
 // Cache configuration
 let cachedData: { holders: number; timestamp: number } | null = null;
