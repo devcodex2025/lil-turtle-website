@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import useMinWidth from '../hooks/useMinWidth';
 import { motion, AnimatePresence } from "framer-motion";
-import dynamic from 'next/dynamic';
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,14 +12,10 @@ const NAV_LINKS = [
     { name: "Buy Token", href: "/buy" },
 ];
 
-// Dynamically import ConnectButton to avoid hydration issues
-const ConnectButton = dynamic(() => import('./ConnectButton'), { ssr: false });
-
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
-    const isBuyPage = pathname === "/buy";
 
     // Close mobile menu when route changes (prevent stale open state after navigation)
     // AND GLOBAL STYLE GUARD:
@@ -176,8 +171,6 @@ export default function Navbar() {
                             </Link>
                         );
                     })}
-
-                    {isBuyPage && <ConnectButton />}
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -231,11 +224,6 @@ export default function Navbar() {
                                     {link.name}
                                 </Link>
                             ))}
-                            {isBuyPage && (
-                                <div className="flex justify-center">
-                                    <ConnectButton />
-                                </div>
-                            )}
                         </div>
                     </motion.div>
                 )}

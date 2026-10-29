@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import { AppWalletProvider } from "@/components/AppWalletProvider";
 import Navbar from "@/components/Navbar";
 
 const outfit = Outfit({
@@ -101,10 +100,8 @@ export default function RootLayout({
             }),
           }}
         />
-        <AppWalletProvider>
-          <Navbar />
-          {children}
-        </AppWalletProvider>
+        <Navbar />
+        {children}
       </body>
     </html>
   );
