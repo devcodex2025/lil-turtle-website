@@ -31,6 +31,17 @@ export const metadata: Metadata = {
     "Jupiter swap",
     "memecoin launch"
   ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "Lil Turtle - Community Memecoin on Solana",
     description: "Join the elite Lil Turtle community. Community-driven memecoin on Solana.",
