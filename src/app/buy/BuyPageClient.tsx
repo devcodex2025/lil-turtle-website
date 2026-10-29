@@ -26,6 +26,7 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                 console.error("Error loading token data:", e);
             }
         };
+        loadData(); // Fetch fresh data immediately on mount
         const interval = setInterval(loadData, 60000); // Update every minute
         return () => clearInterval(interval);
     }, []);
@@ -84,6 +85,16 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                             <h2 className="text-xl font-bold text-white mb-4 px-4">Swap Token</h2>
                             {/* Jupiter Terminal Container */}
                             <JupiterWidget />
+
+                            {/* Direct buy on pump.fun */}
+                            <a
+                                href="https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-4 flex items-center justify-center gap-2 px-6 py-3 glass-card text-white font-bold rounded-xl hover:border-primary-gold hover:text-primary-gold transition-all duration-300"
+                            >
+                                BUY ON PUMP.FUN
+                            </a>
 
                             {/* <p className="text-center text-xs text-gray-500 mt-4">
                                 Powered by Jupiter Aggregator

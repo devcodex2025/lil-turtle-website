@@ -17,46 +17,27 @@ const TOKEN_ADDRESS = 'CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump';
 
 export async function fetchTokenInfo(): Promise<TokenInfo | null> {
     try {
-        // 1. Fetch Token Info
-        const tokenResponse = await fetch(`https://api.geckoterminal.com/api/v2/networks/solana/tokens/${TOKEN_ADDRESS}`);
-        const tokenData = await tokenResponse.json();
+        // Pools endpoint — works for bonding-curve (pump.fun) tokens and for graduated pools
+        const poolsResponse = await fetch(`https://api.geckoterminal.com/api/v2/networks/solana/tokens/${TOKEN_ADDRESS}/pools`);
+        const poolsData = await poolsResponse.json();
 
-        if (!tokenData.data || !tokenData.data.attributes) return null;
+        const pool = poolsData.data?.[0];
+        if (!pool || !pool.attributes) return null;
 
-        const tokenAttrs = tokenData.data.attributes;
+        const priceUsd = pool.attributes.token_price_usd || pool.attributes.base_token_price_usd;
+        if (!priceUsd) return null;
 
-        // Token still on bonding curve (no pool yet) — return null so UI keeps its default state
-        if (!tokenAttrs.price_usd) return null;
-
-        const topPoolId = tokenData.data.relationships?.top_pools?.data?.[0]?.id;
-        const pairAddress = topPoolId ? topPoolId.replace('solana_', '') : '';
-
-        let priceChange24h = 0;
-
-        // 2. Fetch Pool Info (if pair exists) to get 24h change
-        if (pairAddress) {
-            try {
-                const poolResponse = await fetch(`https://api.geckoterminal.com/api/v2/networks/solana/pools/${pairAddress}`);
-                const poolData = await poolResponse.json();
-                if (poolData.data && poolData.data.attributes) {
-                    priceChange24h = parseFloat(poolData.data.attributes.price_change_percentage?.h24 || '0');
-                }
-            } catch (e) {
-                console.warn('Error fetching pool info:', e);
-            }
-        }
-
-        // fallback to token attribute price change percentage from the token data if pool does not provide it
-        priceChange24h = parseFloat(tokenAttrs.price_change_percentage?.h24 || String(priceChange24h || 0));
+        // Derive symbol from pool name, e.g. "LILTURTLE / SOL"
+        const symbol = ((pool.attributes.name || '').split('/')[0] || '').trim().toUpperCase() || 'LILTURTLE';
 
         return {
-            price: tokenAttrs.price_usd,
-            priceChange24h: priceChange24h,
-            marketCap: parseFloat(tokenAttrs.fdv_usd || '0'),
-            liquidity: parseFloat(tokenAttrs.total_reserve_in_usd || '0'),
-            volume24h: parseFloat(tokenAttrs.volume_usd?.h24 || '0'),
-            pairAddress: pairAddress,
-            symbol: tokenAttrs.symbol
+            price: priceUsd,
+            priceChange24h: parseFloat(pool.attributes.price_change_percentage?.h24 || '0'),
+            marketCap: parseFloat(pool.attributes.market_cap_usd || pool.attributes.fdv_usd || '0'),
+            liquidity: parseFloat(pool.attributes.reserve_in_usd || '0'),
+            volume24h: parseFloat(pool.attributes.volume_usd?.h24 || '0'),
+            pairAddress: pool.attributes.address,
+            symbol,
         };
     } catch (error) {
         console.error('Error fetching token info:', error);

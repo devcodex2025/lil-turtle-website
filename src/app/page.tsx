@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Statistics from "@/components/Statistics";
+import Story from "@/components/Story";
 import Ticker from "@/components/Ticker";
 import TokenLaunch from "@/components/TokenLaunch";
 import Footer from "@/components/Footer";
@@ -31,7 +32,7 @@ export default function Home() {
       <Hero />
       <About />
       <Statistics />
-      <Ticker />
+      <Story />
       <Ticker />
       <TokenLaunch />
       <Footer />

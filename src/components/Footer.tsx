@@ -21,7 +21,7 @@ export default function Footer() {
             url: "https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump",
             icon: (
                 <div className="relative w-6 h-6">
-                    <Image src="/boop-logo-32x32.png" alt="Pump.fun - Memecoin Launchpad" fill className="object-contain" />
+                    <Image src="/pump-fun-logo.png" alt="Pump.fun - Memecoin Launchpad" fill className="object-contain" />
                 </div>
             ),
         },
