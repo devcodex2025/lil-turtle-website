@@ -26,6 +26,15 @@ export default function Footer() {
             ),
         },
         {
+            name: "Meteora",
+            url: "https://www.meteora.ag/dlmm/HSfvyEjGHwGoDrU9AqX6dZ9oUExbTMMiyDgJsEP1RJVW",
+            icon: (
+                <div className="relative w-6 h-6">
+                    <Image src="/meteora-logo.png" alt="Meteora - DLMM Liquidity Pool" fill className="object-contain" />
+                </div>
+            ),
+        },
+        {
             name: "Twitter",
             url: "https://x.com/lilturtlenft",
             icon: (
