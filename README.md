@@ -16,7 +16,7 @@ Meet Lil Turtle – the most stylish token in your portfolio. The interactive 3D
 
 ## 🔧 Token configuration
 
-The token address is defined in a few components (`Hero`, `TokenLaunch`, `Footer`, `JupiterWidget`, `services/tokenData.ts`, `api/holders`). Search for the mint address to update it in one pass:
+The token address is defined in a few components (`Hero`, `TokenLaunch`, `Footer`, `services/tokenData.ts`, `api/holders`). Search for the mint address to update it in one pass:
 
 ```
 CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump

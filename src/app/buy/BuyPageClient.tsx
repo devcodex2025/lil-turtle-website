@@ -2,10 +2,13 @@
 
 import Footer from "@/components/Footer";
 import TokenChart from "@/components/TokenChart";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { fetchTokenInfo, TokenInfo } from "@/services/tokenData";
 import { useState, useEffect } from "react";
-import JupiterWidget from "@/components/JupiterWidget";
+
+const PUMP_FUN_URL = "https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump";
+const JUPITER_URL = "https://jup.ag/swap/SOL-CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump";
 
 export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: TokenInfo | null }) {
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(initialTokenInfo);
@@ -74,31 +77,50 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                         </div>
                     </div>
 
-                    {/* Right: Jupiter Swap Terminal */}
+                    {/* Right: Buy CTA */}
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
                         className="lg:col-span-1"
                     >
-                        <div className="glass-card p-4 rounded-3xl lg:sticky top-24 border border-primary-gold/20 overflow-hidden">
-                            <h2 className="text-xl font-bold text-white mb-4 px-4">Swap Token</h2>
-                            {/* Jupiter Terminal Container */}
-                            <JupiterWidget />
+                        <div className="glass-card p-8 rounded-3xl lg:sticky top-24 border border-primary-gold/20 overflow-hidden text-center">
+                            <h2 className="text-3xl font-black text-white mb-3">
+                                BUY <span className="text-primary-green">$LILTURTLE</span>
+                            </h2>
+                            <p className="text-gray-400 text-sm mb-8">
+                                Swap SOL for LILTURTLE on your favourite platform
+                            </p>
 
-                            {/* Direct buy on pump.fun */}
-                            <a
-                                href="https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-4 flex items-center justify-center gap-2 px-6 py-3 glass-card text-white font-bold rounded-xl hover:border-primary-gold hover:text-primary-gold transition-all duration-300"
-                            >
-                                BUY ON PUMP.FUN
-                            </a>
+                            <div className="flex flex-col gap-4">
+                                <a
+                                    href={PUMP_FUN_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-gold text-black font-black text-lg rounded-xl hover:bg-white transition-all duration-300 transform hover:scale-105 glow-gold shadow-xl"
+                                >
+                                    <span className="relative w-6 h-6 rounded-full shrink-0">
+                                        <Image src="/pump-fun-logo.png" alt="Pump.fun" fill sizes="24px" className="object-contain drop-shadow" />
+                                    </span>
+                                    BUY ON PUMP.FUN
+                                </a>
 
-                            {/* <p className="text-center text-xs text-gray-500 mt-4">
-                                Powered by Jupiter Aggregator
-                            </p> */}
+                                <a
+                                    href={JUPITER_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-3 px-8 py-4 glass-card text-white font-bold text-lg rounded-xl hover:border-primary-gold hover:text-primary-gold transition-all duration-300"
+                                >
+                                    <span className="relative w-6 h-6 rounded-full overflow-hidden shrink-0">
+                                        <Image src="/jup-logo.png" alt="Jupiter" fill sizes="24px" className="object-cover" />
+                                    </span>
+                                    BUY ON JUPITER
+                                </a>
+                            </div>
+
+                            <p className="text-xs text-gray-500 mt-8">
+                                Connect your wallet on the platform you choose
+                            </p>
                         </div>
                     </motion.div>
                 </div>
@@ -108,5 +130,3 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
         </main>
     );
 }
-
-
