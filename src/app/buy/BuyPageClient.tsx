@@ -1,6 +1,7 @@
 "use client";
 
 import Footer from "@/components/Footer";
+import FAQ from "@/components/FAQ";
 import TokenChart from "@/components/TokenChart";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -136,6 +137,8 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                     </div>
                 </div>
             </section>
+
+            <FAQ />
 
             <Footer />
         </main>

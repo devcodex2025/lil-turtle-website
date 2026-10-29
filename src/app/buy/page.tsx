@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import BuyPageClient from "./BuyPageClient";
+import { FAQ_ITEMS } from "./faqData";
 import { fetchTokenInfo } from "@/services/tokenData";
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -64,6 +65,19 @@ export default async function BuyPage() {
                                     { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
                                     { "@type": "ListItem", position: 2, name: "Buy Token", item: `${baseUrl}/buy` },
                                 ],
+                            },
+                            {
+                                "@type": "FAQPage",
+                                "@id": `${baseUrl}/buy#faq`,
+                                isPartOf: { "@id": `${baseUrl}/buy#webpage` },
+                                mainEntity: FAQ_ITEMS.map((item) => ({
+                                    "@type": "Question",
+                                    name: item.question,
+                                    acceptedAnswer: {
+                                        "@type": "Answer",
+                                        text: item.answer,
+                                    },
+                                })),
                             },
                         ],
                     }),
