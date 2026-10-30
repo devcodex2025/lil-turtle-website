@@ -108,7 +108,7 @@ export default function Footer() {
                             ))}
                         </div>
                         <div className="mt-5">
-                            <TokenAddress variant="compact" />
+                            <TokenAddress variant="wide" />
                         </div>
                     </div>
                 </div>

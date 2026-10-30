@@ -141,7 +141,7 @@ export default function Navbar() {
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? "bg-black/80 backdrop-blur-xl py-4" : "py-8 bg-transparent"
                 }`}
         >
-            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+            <div className="relative max-w-7xl mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 group">
                     <div className="relative w-12 h-12 group-hover:rotate-12 transition-transform duration-300">
@@ -158,7 +158,7 @@ export default function Navbar() {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="hidden md:flex nav-desktop-force items-center gap-6">
+                <div className="hidden md:flex nav-desktop-force items-center gap-8">
                     {NAV_LINKS.map((link) => {
                         const isActive = pathname === link.href || (link.href !== '/#about' && pathname.startsWith(link.href));
                         return (
@@ -172,6 +172,10 @@ export default function Navbar() {
                             </Link>
                         );
                     })}
+                </div>
+
+                {/* Token address: centered in the header (desktop) */}
+                <div className="hidden md:block nav-desktop-force absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                     <TokenAddress variant="compact" />
                 </div>
 

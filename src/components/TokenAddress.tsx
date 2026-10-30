@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { TOKEN_ADDRESS } from "@/services/tokenData";
 
 interface TokenAddressProps {
-    /** "compact" shows a shortened address chip, "full" shows the complete address with a label */
-    variant?: "compact" | "full";
+    /** "compact" shows a shortened address chip, "wide" shows the full address stretched to its container, "full" shows the complete address with a label */
+    variant?: "compact" | "wide" | "full";
 }
 
 function CopyIcon() {
@@ -89,6 +89,34 @@ export default function TokenAddress({ variant = "compact" }: TokenAddressProps)
     }
 
     const short = `${TOKEN_ADDRESS.slice(0, 4)}…${TOKEN_ADDRESS.slice(-4)}`;
+
+    if (variant === "wide") {
+        return (
+            <div
+                className="glass-card w-full flex items-center justify-between gap-3 rounded-xl pl-4 pr-2 py-2.5 border border-white/10"
+                aria-label="Token contract address"
+            >
+                <span
+                    title={TOKEN_ADDRESS}
+                    className="font-mono text-[10px] md:text-[11px] text-gray-200 whitespace-nowrap overflow-hidden text-ellipsis flex-1"
+                >
+                    {TOKEN_ADDRESS}
+                </span>
+                <button
+                    onClick={copy}
+                    aria-label="Copy token address"
+                    title="Copy address"
+                    className={`shrink-0 flex items-center justify-center w-9 h-9 rounded-lg border border-white/10 transition-all duration-300 ${
+                        copied
+                            ? "text-primary-green border-primary-green/50 bg-primary-green/10"
+                            : "text-white hover:text-primary-green hover:border-primary-green/50 hover:bg-white/5"
+                    }`}
+                >
+                    {copied ? <CheckIcon /> : <CopyIcon />}
+                </button>
+            </div>
+        );
+    }
 
     return (
         <button
