@@ -107,9 +107,6 @@ export default function Footer() {
                                 </a>
                             ))}
                         </div>
-                        <div className="mt-5">
-                            <TokenAddress variant="wide" />
-                        </div>
                     </div>
                 </div>
 
@@ -121,6 +118,9 @@ export default function Footer() {
                     <p className="text-gray-600 text-xs mt-2">
                         Small steps matter. Become better.
                     </p>
+                    <div className="mt-5 flex justify-center">
+                        <TokenAddress variant="wide" label="CA" />
+                    </div>
                 </div>
             </div>
         </footer>

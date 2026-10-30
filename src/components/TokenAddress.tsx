@@ -6,6 +6,8 @@ import { TOKEN_ADDRESS } from "@/services/tokenData";
 interface TokenAddressProps {
     /** "compact" shows a shortened address chip, "wide" shows the full address stretched to its container, "full" shows the complete address with a label */
     variant?: "compact" | "wide" | "full";
+    /** Optional mono prefix shown before the address (used with variant="wide", e.g. "CA") */
+    label?: string;
 }
 
 function CopyIcon() {
@@ -26,7 +28,7 @@ function CheckIcon() {
 }
 
 /** Glass-styled token contract address chip with one-click copy-to-clipboard. */
-export default function TokenAddress({ variant = "compact" }: TokenAddressProps) {
+export default function TokenAddress({ variant = "compact", label }: TokenAddressProps) {
     const [copied, setCopied] = useState(false);
     const timer = useRef<number | null>(null);
 
@@ -99,6 +101,11 @@ export default function TokenAddress({ variant = "compact" }: TokenAddressProps)
                 className="glass-card w-fit flex items-center gap-3 rounded-xl pl-4 pr-2 py-2.5 border border-white/10"
                 aria-label="Token contract address"
             >
+                {label && (
+                    <span className="font-mono text-[10px] md:text-[11px] text-gray-500 whitespace-nowrap">
+                        {label} -
+                    </span>
+                )}
                 <span
                     title={TOKEN_ADDRESS}
                     className="font-mono text-[10px] md:text-[11px] text-gray-200 whitespace-nowrap"
