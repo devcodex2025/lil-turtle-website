@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { useState, useEffect } from "react";
 import useMinWidth from '../hooks/useMinWidth';
-import TokenAddress from "./TokenAddress";
+import { TOKEN_ADDRESS } from "@/services/tokenData";
 
 export default function Footer() {
     // Force grid columns to bypass CSS pollution
@@ -118,9 +118,9 @@ export default function Footer() {
                     <p className="text-gray-600 text-xs mt-2">
                         Small steps matter. Become better.
                     </p>
-                    <div className="mt-5 flex justify-center">
-                        <TokenAddress variant="wide" label="CA" />
-                    </div>
+                    <p className="text-gray-500 text-xs mt-4 font-mono break-all">
+                        CA - {TOKEN_ADDRESS}
+                    </p>
                 </div>
             </div>
         </footer>
