@@ -174,11 +174,6 @@ export default function Navbar() {
                     })}
                 </div>
 
-                {/* Token address: centered in the header (desktop) */}
-                <div className="hidden md:block nav-desktop-force absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <TokenAddress variant="compact" />
-                </div>
-
                 {/* Mobile Menu Button */}
                 <button
                     onClick={() => {

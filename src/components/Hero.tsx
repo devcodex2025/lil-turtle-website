@@ -1,6 +1,7 @@
 "use client";
 
 import HeroClient from "./HeroClient";
+import TokenAddress from "./TokenAddress";
 
 import { useState, useEffect } from "react";
 
@@ -54,6 +55,11 @@ export default function Hero() {
 
                 {/* 3D Model Viewer – client component */}
                 <HeroClient />
+            </div>
+
+            {/* Token address: bottom-right of the first screen (desktop) */}
+            <div className="hidden md:block absolute bottom-8 right-8 z-20">
+                <TokenAddress variant="compact" />
             </div>
 
             {/* Scroll Indicator Removed */}

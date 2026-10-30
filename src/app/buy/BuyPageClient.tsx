@@ -52,7 +52,7 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                         <h1 className="text-4xl md:text-5xl font-black text-white flex flex-wrap items-center gap-4">
                             ${tokenInfo?.symbol || "LILTURTLE"} <span className="text-primary-green text-2xl bg-primary-green/10 px-3 py-1 rounded-lg">{tokenInfo?.symbol || "..."}</span>
                         </h1>
-                        <div className="mt-5 max-w-xl">
+                        <div className="mt-5">
                             <TokenAddress variant="full" />
                         </div>
                     </motion.div>
@@ -130,15 +130,11 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                                     <span className="relative w-6 h-6 rounded-full overflow-hidden shrink-0">
                                         <Image src="/jup-logo.png" alt="Jupiter" fill sizes="24px" className="object-cover" />
                                     </span>
-                                    VIEW ON JUPITER
+                                    BUY ON JUPITER
                                 </a>
                             </div>
 
-                            <p className="text-xs text-primary-green/80 mt-6 leading-relaxed">
-                                Live on pump.fun right now. Direct swaps on Jupiter unlock automatically once the token graduates from the pump.fun bonding curve.
-                            </p>
-
-                            <p className="text-xs text-gray-500 mt-4">
+                            <p className="text-xs text-gray-500 mt-8">
                                 Connect your wallet on the platform you choose
                             </p>
                         </div>

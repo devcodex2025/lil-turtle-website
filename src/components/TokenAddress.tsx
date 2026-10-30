@@ -60,13 +60,16 @@ export default function TokenAddress({ variant = "compact" }: TokenAddressProps)
     if (variant === "full") {
         return (
             <div
-                className="glass-card flex items-center gap-3 rounded-xl px-4 py-3 border border-primary-gold/20"
+                className="glass-card w-fit flex items-center gap-3 rounded-xl px-4 py-3 border border-primary-gold/20"
                 aria-label="Token contract address"
             >
                 <span className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-primary-green bg-primary-green/10 px-2 py-1 rounded">
                     CA
                 </span>
-                <span className="font-mono text-[11px] md:text-xs text-gray-200 break-all leading-relaxed flex-1">
+                <span
+                    title={TOKEN_ADDRESS}
+                    className="font-mono text-[11px] md:text-xs text-gray-200 whitespace-nowrap leading-relaxed"
+                >
                     {TOKEN_ADDRESS}
                 </span>
                 <button
@@ -93,12 +96,12 @@ export default function TokenAddress({ variant = "compact" }: TokenAddressProps)
     if (variant === "wide") {
         return (
             <div
-                className="glass-card w-full flex items-center justify-between gap-3 rounded-xl pl-4 pr-2 py-2.5 border border-white/10"
+                className="glass-card w-fit flex items-center gap-3 rounded-xl pl-4 pr-2 py-2.5 border border-white/10"
                 aria-label="Token contract address"
             >
                 <span
                     title={TOKEN_ADDRESS}
-                    className="font-mono text-[10px] md:text-[11px] text-gray-200 whitespace-nowrap overflow-hidden text-ellipsis flex-1"
+                    className="font-mono text-[10px] md:text-[11px] text-gray-200 whitespace-nowrap"
                 >
                     {TOKEN_ADDRESS}
                 </span>
