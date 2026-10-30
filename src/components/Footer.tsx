@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { useState, useEffect } from "react";
 import useMinWidth from '../hooks/useMinWidth';
+import TokenAddress from "./TokenAddress";
 
 export default function Footer() {
     // Force grid columns to bypass CSS pollution
@@ -105,6 +106,9 @@ export default function Footer() {
                                     {link.icon}
                                 </a>
                             ))}
+                        </div>
+                        <div className="mt-5">
+                            <TokenAddress variant="compact" />
                         </div>
                     </div>
                 </div>

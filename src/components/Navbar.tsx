@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import TokenAddress from "./TokenAddress";
 
 const NAV_LINKS = [
     { name: "About", href: "/#about" },
@@ -157,7 +158,7 @@ export default function Navbar() {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="hidden md:flex nav-desktop-force items-center gap-8">
+                <div className="hidden md:flex nav-desktop-force items-center gap-6">
                     {NAV_LINKS.map((link) => {
                         const isActive = pathname === link.href || (link.href !== '/#about' && pathname.startsWith(link.href));
                         return (
@@ -171,6 +172,7 @@ export default function Navbar() {
                             </Link>
                         );
                     })}
+                    <TokenAddress variant="compact" />
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -218,12 +220,13 @@ export default function Navbar() {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-                        <div className="flex flex-col gap-8 text-center mt-12">
+                        <div className="flex flex-col gap-8 text-center mt-12 items-center">
                             {NAV_LINKS.map((link) => (
                                 <Link key={link.name} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black text-white hover:text-primary-green transition-colors">
                                     {link.name}
                                 </Link>
                             ))}
+                            <TokenAddress variant="compact" />
                         </div>
                     </motion.div>
                 )}

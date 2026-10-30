@@ -13,7 +13,7 @@ export interface ChartDataPoint {
     value: number;
 }
 
-const TOKEN_ADDRESS = 'CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump';
+export const TOKEN_ADDRESS = 'CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump';
 
 export async function fetchTokenInfo(): Promise<TokenInfo | null> {
     try {

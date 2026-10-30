@@ -6,10 +6,12 @@ import TokenChart from "@/components/TokenChart";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { fetchTokenInfo, TokenInfo } from "@/services/tokenData";
+import { TOKEN_ADDRESS } from "@/services/tokenData";
+import TokenAddress from "@/components/TokenAddress";
 import { useState, useEffect } from "react";
 
-const PUMP_FUN_URL = "https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump";
-const JUPITER_URL = "https://jup.ag/swap/SOL-CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump";
+const PUMP_FUN_URL = `https://pump.fun/coin/${TOKEN_ADDRESS}`;
+const JUPITER_URL = `https://jup.ag/tokens/${TOKEN_ADDRESS}`;
 
 export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: TokenInfo | null }) {
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(initialTokenInfo);
@@ -50,6 +52,9 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                         <h1 className="text-4xl md:text-5xl font-black text-white flex flex-wrap items-center gap-4">
                             ${tokenInfo?.symbol || "LILTURTLE"} <span className="text-primary-green text-2xl bg-primary-green/10 px-3 py-1 rounded-lg">{tokenInfo?.symbol || "..."}</span>
                         </h1>
+                        <div className="mt-5 max-w-xl">
+                            <TokenAddress variant="full" />
+                        </div>
                     </motion.div>
 
                     <div className="grid lg:grid-cols-3 gap-8">
@@ -125,11 +130,15 @@ export default function BuyPageClient({ initialTokenInfo }: { initialTokenInfo: 
                                     <span className="relative w-6 h-6 rounded-full overflow-hidden shrink-0">
                                         <Image src="/jup-logo.png" alt="Jupiter" fill sizes="24px" className="object-cover" />
                                     </span>
-                                    BUY ON JUPITER
+                                    VIEW ON JUPITER
                                 </a>
                             </div>
 
-                            <p className="text-xs text-gray-500 mt-8">
+                            <p className="text-xs text-primary-green/80 mt-6 leading-relaxed">
+                                Live on pump.fun right now. Direct swaps on Jupiter unlock automatically once the token graduates from the pump.fun bonding curve.
+                            </p>
+
+                            <p className="text-xs text-gray-500 mt-4">
                                 Connect your wallet on the platform you choose
                             </p>
                         </div>

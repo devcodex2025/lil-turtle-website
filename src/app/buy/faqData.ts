@@ -12,11 +12,11 @@ export const FAQ_ITEMS: FaqItem[] = [
     },
     {
         question: "How do I buy $LILTURTLE?",
-        answer: "1) Install a Solana wallet like Phantom or Solflare. 2) Fund it with SOL (from an exchange or directly in your wallet). 3) Click BUY ON PUMP.FUN or BUY ON JUPITER on this page and swap SOL for $LILTURTLE. That's it - you are a holder.",
+        answer: "1) Install a Solana wallet like Phantom or Solflare. 2) Fund it with SOL (from an exchange or directly in your wallet). 3) Click BUY ON PUMP.FUN on this page and swap SOL for $LILTURTLE. That's it - you are a holder. Direct swaps on Jupiter will unlock automatically once the token graduates from the pump.fun bonding curve.",
     },
     {
         question: "What is the token contract address?",
-        answer: "The official $LILTURTLE contract address is CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump. Always double-check it before trading - the only links we post are on this website and our official X account.",
+        answer: "The official $LILTURTLE contract address is CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump. It is always visible in the navbar, in the footer and right on this page with a one-click copy button - so you don't have to type it manually. Always double-check it before trading - the only links we post are on this website and our official X account.",
         linkLabel: "View on pump.fun",
         linkHref: "https://pump.fun/coin/CVGcZCShuPZJKAHe3VE4FBR4jo6jpL9Z9xP9Wigmpump",
     },
